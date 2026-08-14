@@ -70,13 +70,13 @@ else
                 }
                 else
                 {
-                    <div class="form-grid">
+                    <div class="settings-fields">
                         @foreach (var item in group)
                         {
                             var index = Model.Items.FindIndex(x => x.SettingId == item.SettingId);
                             if (item.IsToggle)
                             {
-                                <label class="settings-toggle span-full">
+                                <label class="settings-toggle">
                                     <input type="checkbox"
                                            name="Items[@index].SettingValue"
                                            value="true"
@@ -93,7 +93,7 @@ else
                             }
                             else
                             {
-                                <label class="span-full">
+                                <label>
                                     @item.SettingKey
                                     @if (!string.IsNullOrWhiteSpace(item.Description))
                                     {
