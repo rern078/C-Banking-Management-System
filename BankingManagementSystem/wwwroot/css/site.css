@@ -1175,6 +1175,112 @@ button.btn {
   color: var(--danger);
 }
 
+.gc-panel {
+  margin-bottom: 1rem;
+}
+
+.gc-help {
+  margin: -0.15rem 0 1rem;
+}
+
+.gc-cursor {
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.gc-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.gc-controls {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.gc-field {
+  display: grid;
+  gap: 0.28rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.gc-field input {
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.gc-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.gc-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.gc-chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--teal-deep);
+  border-radius: 999px;
+  padding: 0.28rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gc-chip:hover {
+  background: var(--teal-soft);
+  border-color: #9ec9c1;
+}
+
+.gc-status {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  min-height: 1.2em;
+}
+
+.gc-status.ok {
+  color: #1f6b41;
+  font-weight: 650;
+}
+
+.gc-status.bad {
+  color: var(--danger);
+  font-weight: 650;
+}
+
+.gc-stage {
+  min-height: 320px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f7fbfa;
+}
+
+.gc-stage canvas {
+  display: block;
+  width: 100%;
+  height: 320px;
+}
+
 .hint {
   color: var(--ink-soft);
   font-size: 0.75rem;
@@ -2134,6 +2240,10 @@ code {
   .landing-split {
     grid-template-columns: 1fr;
     gap: 1.75rem;
+  }
+
+  .gc-layout {
+    grid-template-columns: 1fr;
   }
 
   .hero,

@@ -99,6 +99,52 @@
     </div>
 </div>
 
+<div class="panel gc-panel" id="graphCalc">
+    <div class="panel-head">
+        <h2><i class="bi bi-graph-up"></i> Graphing calculator</h2>
+        <span class="gc-cursor" id="gcCursor"></span>
+    </div>
+    <p class="subtitle gc-help">Plot <code>y</code> as a function of <code>x</code>. Supports <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>sqrt</code>, <code>abs</code>, <code>log</code>, <code>ln</code>, <code>exp</code>, <code>pi</code>, and <code>^</code>.</p>
+
+    <div class="gc-layout">
+        <div class="gc-controls">
+            <label class="gc-field">
+                <span>Expression y =</span>
+                <input id="gcExpr" type="text" value="x^2" autocomplete="off" spellcheck="false" />
+            </label>
+
+            <div class="gc-range">
+                <label class="gc-field"><span>X min</span><input id="gcXmin" type="number" step="any" value="-10" /></label>
+                <label class="gc-field"><span>X max</span><input id="gcXmax" type="number" step="any" value="10" /></label>
+                <label class="gc-field"><span>Y min</span><input id="gcYmin" type="number" step="any" value="-10" /></label>
+                <label class="gc-field"><span>Y max</span><input id="gcYmax" type="number" step="any" value="10" /></label>
+            </div>
+
+            <div class="gc-actions">
+                <button type="button" class="btn" id="gcPlot"><i class="bi bi-play-fill"></i> Plot</button>
+                <button type="button" class="btn btn-ghost" id="gcClear"><i class="bi bi-eraser"></i> Clear</button>
+            </div>
+
+            <div class="gc-presets">
+                <button type="button" class="gc-chip" data-expr="x^2" data-xmin="-5" data-xmax="5" data-ymin="-1" data-ymax="25">x²</button>
+                <button type="button" class="gc-chip" data-expr="sin(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">sin(x)</button>
+                <button type="button" class="gc-chip" data-expr="cos(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">cos(x)</button>
+                <button type="button" class="gc-chip" data-expr="abs(x)" data-xmin="-8" data-xmax="8" data-ymin="-1" data-ymax="8">|x|</button>
+                <button type="button" class="gc-chip" data-expr="sqrt(x)" data-xmin="0" data-xmax="16" data-ymin="-1" data-ymax="5">√x</button>
+                <button type="button" class="gc-chip" data-expr="1000*(1.05)^x" data-xmin="0" data-xmax="20" data-ymin="0" data-ymax="3000">Compound 5%</button>
+                <button type="button" class="gc-chip" data-expr="50000*exp(-0.08*x)" data-xmin="0" data-xmax="30" data-ymin="0" data-ymax="55000">Loan decay</button>
+                <button type="button" class="gc-chip" data-expr="x^3 - 3*x" data-xmin="-3" data-xmax="3" data-ymin="-4" data-ymax="4">x³ − 3x</button>
+            </div>
+
+            <p class="gc-status" id="gcStatus">Ready. Enter an expression in x.</p>
+        </div>
+
+        <div class="gc-stage">
+            <canvas id="gcCanvas" aria-label="Function graph"></canvas>
+        </div>
+    </div>
+</div>
+
 @if (Model.FrozenAccounts > 0 || Model.OpenCheques > 0 || Model.PendingLoans > 0 || Model.UnreadNotifications > 0)
 {
     <div class="attention-row">
@@ -258,3 +304,7 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/graphing-calculator.js" asp-append-version="true"></script>
+}
