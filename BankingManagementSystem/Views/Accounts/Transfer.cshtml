@@ -1,0 +1,51 @@
+@model BankingManagementSystem.ViewModels.TransferFormViewModel
+@{
+    ViewData["Title"] = "Transfer";
+    var from = ViewBag.FromAccount as BankingManagementSystem.Models.Account;
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-arrow-left-right"></i> Transfer</h1>
+        <p class="subtitle">From <code>@from?.AccountNumber</code> · Available @from?.Balance.ToString("C")</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.FromAccountId"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Transfer" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <input type="hidden" asp-for="FromAccountId" />
+            <div class="form-section">
+                <p class="form-section-title">Destination</p>
+                <div class="form-grid">
+                    <label class="span-full">To account number<input asp-for="ToAccountNumber" placeholder="BMS..." /></label>
+                </div>
+            </div>
+            <div class="form-section">
+                <p class="form-section-title">Amount</p>
+                <div class="form-grid">
+                    <label>Amount<input asp-for="Amount" type="number" step="0.01" min="0.01" placeholder="0.00" /></label>
+                    <label>Transfer fee<input asp-for="TransferFee" type="number" step="0.01" min="0" /></label>
+                    <label class="span-full">Description<input asp-for="Description" placeholder="Optional note" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.FromAccountId">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Confirm transfer</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Transfer rules</h3>
+        <p>Total debit equals amount plus fee. Both accounts must be active.</p>
+        <ul>
+            <li>Source and destination cannot match</li>
+            <li>Insufficient funds will be blocked</li>
+            <li>A transfer record is stored</li>
+        </ul>
+    </aside>
+</div>

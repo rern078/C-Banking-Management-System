@@ -1,0 +1,50 @@
+@model BankingManagementSystem.Models.Branch
+@{ ViewData["Title"] = "Add branch"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-building"></i> Add branch</h1>
+        <p class="subtitle">Register a new bank branch location</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Identity</p>
+                <div class="form-grid">
+                    <label>Branch code<input asp-for="BranchCode" placeholder="HQ01" /></label>
+                    <label>Branch name<input asp-for="BranchName" /></label>
+                    <label>Status<select asp-for="Status" asp-items="Html.GetEnumSelectList<BankingManagementSystem.Models.RecordStatus>()"></select></label>
+                    <label>City<input asp-for="City" /></label>
+                </div>
+            </div>
+            <div class="form-section">
+                <p class="form-section-title">Contact</p>
+                <div class="form-grid">
+                    <label>Phone<input asp-for="Phone" /></label>
+                    <label>Email<input asp-for="Email" /></label>
+                    <label class="span-full">Address<textarea asp-for="Address"></textarea></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Save branch</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Branch setup</h3>
+        <p>Branches organize customers, staff, and accounts by location.</p>
+        <ul>
+            <li>Use short unique codes</li>
+            <li>Keep contact details accurate</li>
+            <li>Set inactive when closed</li>
+        </ul>
+    </aside>
+</div>

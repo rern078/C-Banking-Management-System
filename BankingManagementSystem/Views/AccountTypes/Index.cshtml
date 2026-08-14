@@ -1,0 +1,20 @@
+@model IEnumerable<BankingManagementSystem.Models.AccountTypeEntity>
+@{ ViewData["Title"] = "Account types"; }
+<h1 class="page-title">Account types</h1>
+<div class="toolbar"><a class="btn" asp-action="Create">Add type</a></div>
+<div class="panel">
+<table class="data-table">
+<thead><tr><th>Name</th><th>Min balance</th><th>Interest %</th><th>Description</th></tr></thead>
+<tbody>
+@foreach (var t in Model)
+{
+<tr>
+<td>@t.TypeName</td>
+<td class="money">@t.MinimumBalance.ToString("C")</td>
+<td>@t.InterestRate</td>
+<td>@t.Description</td>
+</tr>
+}
+</tbody>
+</table>
+</div>

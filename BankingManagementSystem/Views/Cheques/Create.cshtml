@@ -1,0 +1,42 @@
+@model BankingManagementSystem.ViewModels.ChequeFormViewModel
+@{ ViewData["Title"] = "Issue cheque"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-file-earmark-text"></i> Issue cheque</h1>
+        <p class="subtitle">Create a cheque against a customer account</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Cheque details</p>
+                <div class="form-grid">
+                    <label class="span-full">Account<select asp-for="AccountId" asp-items="ViewBag.Accounts"><option value="">Select account</option></select></label>
+                    <label>Payee name<input asp-for="PayeeName" /></label>
+                    <label>Amount<input asp-for="Amount" type="number" step="0.01" min="0.01" placeholder="0.00" /></label>
+                    <label class="span-full">Description<input asp-for="Description" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Issue cheque</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Cheque flow</h3>
+        <p>Number is generated automatically. Issued cheques can later be cleared or stopped.</p>
+        <ul>
+            <li>Issued → waiting to clear</li>
+            <li>Cleared → paid</li>
+            <li>Stopped / bounced → blocked</li>
+        </ul>
+    </aside>
+</div>

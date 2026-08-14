@@ -1,0 +1,55 @@
+@model IEnumerable<BankingManagementSystem.Models.Branch>
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = "Branches";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-building"></i> Branches</h1>
+        <p class="subtitle">@list.Count branch location@(list.Count == 1 ? "" : "s") across the network</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> Add branch</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-geo-alt"></i> All branches</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var b in list)
+            {
+                <tr>
+                    <td><code>@b.BranchCode</code></td>
+                    <td>
+                        <div class="row-main">
+                            <span class="row-icon tone-teal"><i class="bi bi-building"></i></span>
+                            <span>@b.BranchName</span>
+                        </div>
+                    </td>
+                    <td>@(b.City ?? "—")</td>
+                    <td>@(b.Phone ?? "—")</td>
+                    <td>
+                        <span class="badge @(b.Status == RecordStatus.Active ? "badge-ok" : b.Status == RecordStatus.Frozen ? "badge-warn" : "badge-danger")">@b.Status</span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

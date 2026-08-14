@@ -1,0 +1,42 @@
+@model BankingManagementSystem.ViewModels.MoneyActionViewModel
+@{ ViewData["Title"] = "New withdrawal"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-box-arrow-up"></i> New withdrawal</h1>
+        <p class="subtitle">Debit an account and store a withdrawal record</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Withdrawal</p>
+                <div class="form-grid">
+                    <label class="span-full">Account<select asp-for="AccountId" asp-items="ViewBag.Accounts"><option value="">Select account</option></select></label>
+                    <label>Amount<input asp-for="Amount" type="number" step="0.01" min="0.01" placeholder="0.00" /></label>
+                    <label>Method<select asp-for="Method" asp-items="ViewBag.Methods"></select></label>
+                    <label class="span-full">Description<input asp-for="Description" placeholder="Optional note" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Confirm withdraw</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>What is saved</h3>
+        <p>Each withdrawal checks available funds and the account minimum, then writes a ledger row and a Withdrawals table row.</p>
+        <ul>
+            <li>Cash, cheque, or ATM</li>
+            <li>Insufficient funds are blocked</li>
+            <li>A reference number is generated</li>
+        </ul>
+    </aside>
+</div>

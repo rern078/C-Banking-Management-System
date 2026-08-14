@@ -1,0 +1,56 @@
+@model IEnumerable<BankingManagementSystem.Models.Deposit>
+@{
+    ViewData["Title"] = "Deposits";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-box-arrow-in-down"></i> Deposits</h1>
+        <p class="subtitle">Cash and other credits posted to accounts</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> New deposit</a>
+    </div>
+</div>
+
+<form method="get" class="search-bar panel" style="align-items:end;">
+    <label style="margin:0;">Account<input name="accountNumber" value="@ViewBag.AccountNumber" placeholder="BMS..." /></label>
+    <button class="btn" type="submit"><i class="bi bi-funnel"></i> Filter</button>
+</form>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-journal-plus"></i> Deposit records</h2>
+        <span class="badge">@list.Count shown</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Account</th>
+                    <th>Customer</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>After</th>
+                    <th>Ref</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var d in list)
+            {
+                <tr>
+                    <td>@d.DepositDate.ToLocalTime().ToString("g")</td>
+                    <td><code>@d.Account?.AccountNumber</code></td>
+                    <td>@d.Account?.Customer?.FullName</td>
+                    <td><span class="badge">@d.Method</span></td>
+                    <td class="money">@d.Amount.ToString("C")</td>
+                    <td class="money">@d.BalanceAfter.ToString("C")</td>
+                    <td><code>@d.ReferenceNumber</code></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

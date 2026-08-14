@@ -1,0 +1,40 @@
+@model BankingManagementSystem.ViewModels.CardFormViewModel
+@{ ViewData["Title"] = "Issue card"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-credit-card-2-front"></i> Issue card</h1>
+        <p class="subtitle">Issue a debit or credit card to an account</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div class="form-section">
+                <p class="form-section-title">Card options</p>
+                <div class="form-grid">
+                    <label class="span-full">Account<select asp-for="AccountId" asp-items="ViewBag.Accounts"><option value="">Select account</option></select></label>
+                    <label>Card type<select asp-for="CardType" asp-items="Html.GetEnumSelectList<BankingManagementSystem.Models.CardType>()"></select></label>
+                    <label>Years valid<input asp-for="YearsValid" type="number" min="1" max="10" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Issue card</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Card issue</h3>
+        <p>Card number and expiry are generated automatically.</p>
+        <ul>
+            <li>Debit links to account balance</li>
+            <li>Default validity is 3 years</li>
+            <li>Status starts Active</li>
+        </ul>
+    </aside>
+</div>

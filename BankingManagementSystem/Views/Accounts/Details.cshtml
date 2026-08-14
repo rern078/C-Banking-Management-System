@@ -1,0 +1,40 @@
+@model BankingManagementSystem.Models.Account
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = Model.AccountNumber;
+    var txs = ViewBag.Transactions as List<Transaction> ?? new();
+}
+<h1 class="page-title">Account @Model.AccountNumber</h1>
+<p class="subtitle">@Model.Customer?.FullName · @Model.AccountType?.TypeName · @Model.Branch?.BranchName</p>
+<div class="stats">
+<div class="stat"><div class="label">Balance</div><div class="value money">@Model.Balance.ToString("C")</div></div>
+<div class="stat"><div class="label">Status</div><div class="value" style="font-size:1.3rem;">@Model.Status</div></div>
+<div class="stat"><div class="label">Currency</div><div class="value" style="font-size:1.3rem;">@Model.Currency</div></div>
+</div>
+@if (Model.Status == RecordStatus.Active)
+{
+<div class="toolbar">
+<a class="btn" asp-action="Deposit" asp-route-id="@Model.AccountId">Deposit</a>
+<a class="btn btn-outline" asp-action="Withdraw" asp-route-id="@Model.AccountId">Withdraw</a>
+<a class="btn btn-ghost" asp-action="Transfer" asp-route-id="@Model.AccountId">Transfer</a>
+</div>
+}
+<div class="panel">
+<h2>Recent transactions</h2>
+<table>
+<thead><tr><th>When</th><th>Type</th><th>Amount</th><th>Before</th><th>After</th><th>Ref</th></tr></thead>
+<tbody>
+@foreach (var t in txs)
+{
+<tr>
+<td>@t.TransactionDate.ToLocalTime().ToString("g")</td>
+<td>@t.TransactionType</td>
+<td class="money">@t.Amount.ToString("C")</td>
+<td class="money">@t.BalanceBefore.ToString("C")</td>
+<td class="money">@t.BalanceAfter.ToString("C")</td>
+<td><code>@t.ReferenceNumber</code></td>
+</tr>
+}
+</tbody>
+</table>
+</div>

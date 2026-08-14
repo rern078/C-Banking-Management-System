@@ -1,0 +1,75 @@
+@model IEnumerable<BankingManagementSystem.ViewModels.UserListItemViewModel>
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = "Users";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-person-badge"></i> Users</h1>
+        <p class="subtitle">@list.Count staff account@(list.Count == 1 ? "" : "s") in the system</p>
+    </div>
+</div>
+
+<form method="get" class="search-bar">
+    <input type="text" name="q" value="@ViewBag.Q" placeholder="Search name or email" />
+    <button class="btn" type="submit"><i class="bi bi-search"></i> Search</button>
+</form>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-people"></i> Staff users</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Branch</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var u in list)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@u.Id">
+                            <div class="row-main">
+                                <span class="row-icon tone-blue"><i class="bi bi-person-fill"></i></span>
+                                <span>@u.FullName</span>
+                            </div>
+                        </a>
+                    </td>
+                    <td><code>@u.UserName</code></td>
+                    <td>@u.Email</td>
+                    <td>@(u.BranchName ?? "—")</td>
+                    <td><span class="badge">@u.Roles</span></td>
+                    <td>@(u.Phone ?? "—")</td>
+                    <td>
+                        <span class="badge @(u.Status == RecordStatus.Active ? "badge-ok" : u.Status == RecordStatus.Frozen ? "badge-warn" : "badge-danger")">@u.Status</span>
+                    </td>
+                    <td>@u.CreatedAt.ToLocalTime().ToString("d")</td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td class="actions">
+                            <a class="btn btn-sm btn-ghost" asp-action="Edit" asp-route-id="@u.Id"><i class="bi bi-pencil"></i> Edit</a>
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+@model BankingManagementSystem.ViewModels.UserDetailViewModel
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-person-badge"></i> @Model.FullName</h1>
+        <p class="subtitle">@Model.Email · @(Model.BranchName ?? "No branch")</p>
+    </div>
+    <div class="actions">
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+        }
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back to users</a>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <div class="stat-icon tone-blue"><i class="bi bi-shield-lock"></i></div>
+        <div>
+            <div class="label">Role</div>
+            <div class="value" style="font-size:1.1rem;">@string.Join(", ", Model.Roles)</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-teal"><i class="bi bi-building"></i></div>
+        <div>
+            <div class="label">Branch</div>
+            <div class="value" style="font-size:1.1rem;">@(Model.BranchCode ?? "—")</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-green"><i class="bi bi-check2-circle"></i></div>
+        <div>
+            <div class="label">Status</div>
+            <div class="value" style="font-size:1.1rem;">@Model.Status</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-gold"><i class="bi bi-journal-check"></i></div>
+        <div>
+            <div class="label">Audit entries</div>
+            <div class="value">@Model.RecentAuditLogs.Count</div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-person-vcard"></i> Profile</h2>
+        </div>
+        <dl class="detail-list">
+            <div><dt>Full name</dt><dd>@Model.FullName</dd></div>
+            <div><dt>Username</dt><dd><code>@Model.UserName</code></dd></div>
+            <div><dt>Email</dt><dd>@Model.Email</dd></div>
+            <div><dt>Phone</dt><dd>@(Model.Phone ?? "—")</dd></div>
+            <div><dt>Branch</dt><dd>@(Model.BranchName ?? "—")</dd></div>
+            <div><dt>Email confirmed</dt><dd>@(Model.EmailConfirmed ? "Yes" : "No")</dd></div>
+            <div><dt>Created</dt><dd>@Model.CreatedAt.ToLocalTime().ToString("f")</dd></div>
+            <div><dt>Last updated</dt><dd>@(Model.UpdatedAt?.ToLocalTime().ToString("f") ?? "—")</dd></div>
+        </dl>
+    </div>
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-key"></i> Access</h2>
+        </div>
+        <dl class="detail-list">
+            <div><dt>Roles</dt><dd>@string.Join(", ", Model.Roles)</dd></div>
+            <div><dt>Status</dt><dd><span class="badge @(Model.Status == RecordStatus.Active ? "badge-ok" : Model.Status == RecordStatus.Frozen ? "badge-warn" : "badge-danger")">@Model.Status</span></dd></div>
+            <div><dt>User ID</dt><dd><code>@Model.Id</code></dd></div>
+        </dl>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-clock-history"></i> Recent audit activity</h2>
+        <span class="badge">@Model.RecentAuditLogs.Count shown</span>
+    </div>
+    @if (!Model.RecentAuditLogs.Any())
+    {
+        <p class="empty-hint">No audit logs for this user yet.</p>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>When</th>
+                        <th>Action</th>
+                        <th>Table</th>
+                        <th>Record</th>
+                        <th>Description</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var log in Model.RecentAuditLogs)
+                {
+                    <tr>
+                        <td>@log.CreatedAt.ToLocalTime().ToString("g")</td>
+                        <td><span class="badge">@log.Action</span></td>
+                        <td>@log.TableName</td>
+                        <td>@log.RecordId</td>
+                        <td>@log.Description</td>
+                        <td>@log.IpAddress</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

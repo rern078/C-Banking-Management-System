@@ -1,0 +1,48 @@
+@model IEnumerable<BankingManagementSystem.Models.AuditLog>
+@{
+    ViewData["Title"] = "Audit logs";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-shield-check"></i> Audit logs</h1>
+        <p class="subtitle">Security and change trail</p>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-journal-check"></i> Recent activity</h2>
+        <span class="badge">@list.Count shown</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Table</th>
+                    <th>Record</th>
+                    <th>Description</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var a in list)
+            {
+                <tr>
+                    <td>@a.CreatedAt.ToLocalTime().ToString("g")</td>
+                    <td>@(a.User?.FullName ?? a.UserId ?? "—")</td>
+                    <td><span class="badge">@a.Action</span></td>
+                    <td>@a.TableName</td>
+                    <td>@a.RecordId</td>
+                    <td>@a.Description</td>
+                    <td>@a.IpAddress</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

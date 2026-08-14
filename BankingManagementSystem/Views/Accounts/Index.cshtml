@@ -1,0 +1,81 @@
+@model IEnumerable<BankingManagementSystem.Models.Account>
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = "Accounts";
+    var list = Model.ToList();
+    var status = ViewBag.Status as string;
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-wallet2"></i> Accounts</h1>
+        <p class="subtitle">@list.Count account@(list.Count == 1 ? "" : "s") in view</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> Open account</a>
+    </div>
+</div>
+
+<div class="toolbar">
+    <a class="filter-chip @(string.IsNullOrEmpty(status) ? "active" : null)" asp-action="Index"><i class="bi bi-collection"></i> All</a>
+    <a class="filter-chip @(status == "Active" ? "active" : null)" asp-action="Index" asp-route-status="Active"><i class="bi bi-check2-circle"></i> Active</a>
+    <a class="filter-chip @(status == "Frozen" ? "active" : null)" asp-action="Index" asp-route-status="Frozen"><i class="bi bi-snow"></i> Frozen</a>
+    <a class="filter-chip @(status == "Closed" ? "active" : null)" asp-action="Index" asp-route-status="Closed"><i class="bi bi-x-circle"></i> Closed</a>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-safe"></i> Account register</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Branch</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var a in list)
+            {
+                <tr>
+                    <td><a asp-action="Details" asp-route-id="@a.AccountId"><code>@a.AccountNumber</code></a></td>
+                    <td>@a.Customer?.FullName</td>
+                    <td>@a.AccountType?.TypeName</td>
+                    <td>@a.Branch?.BranchCode</td>
+                    <td class="money">@a.Balance.ToString("C")</td>
+                    <td>
+                        <span class="badge @(a.Status == RecordStatus.Active ? "badge-ok" : a.Status == RecordStatus.Frozen ? "badge-warn" : "badge-danger")">@a.Status</span>
+                    </td>
+                    <td class="actions">
+                        @if (a.Status != RecordStatus.Frozen)
+                        {
+                            <form asp-action="SetStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@a.AccountId" />
+                                <input type="hidden" name="status" value="@RecordStatus.Frozen" />
+                                <button class="btn btn-sm btn-ghost" type="submit"><i class="bi bi-snow"></i> Freeze</button>
+                            </form>
+                        }
+                        @if (a.Status != RecordStatus.Active)
+                        {
+                            <form asp-action="SetStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@a.AccountId" />
+                                <input type="hidden" name="status" value="@RecordStatus.Active" />
+                                <button class="btn btn-sm btn-ghost" type="submit"><i class="bi bi-check2"></i> Activate</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

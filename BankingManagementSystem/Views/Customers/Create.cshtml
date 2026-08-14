@@ -1,0 +1,74 @@
+@model BankingManagementSystem.ViewModels.CustomerFormViewModel
+@{
+    ViewData["Title"] = "New customer";
+    var branches = ViewBag.Branches as List<BankingManagementSystem.Models.Branch> ?? new();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-person-plus"></i> New customer</h1>
+        <p class="subtitle">Create a customer profile for account opening</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <div class="form-section">
+                <p class="form-section-title">Branch</p>
+                <div class="form-grid">
+                    <label class="span-full">
+                        Home branch
+                        <select asp-for="BranchId">
+                            <option value="">Select branch</option>
+                            @foreach (var b in branches)
+                            {
+                                <option value="@b.BranchId">@b.BranchCode — @b.BranchName</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <p class="form-section-title">Personal info</p>
+                <div class="form-grid">
+                    <label>First name<input asp-for="FirstName" /></label>
+                    <label>Last name<input asp-for="LastName" /></label>
+                    <label>Gender<select asp-for="Gender" asp-items="Html.GetEnumSelectList<BankingManagementSystem.Models.Gender>()"></select></label>
+                    <label>Date of birth<input asp-for="DateOfBirth" type="date" /></label>
+                    <label>National ID<input asp-for="NationalId" /></label>
+                    <label>Phone<input asp-for="Phone" /></label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <p class="form-section-title">Contact</p>
+                <div class="form-grid">
+                    <label class="span-full">Email<input asp-for="Email" /></label>
+                    <label class="span-full">Address<textarea asp-for="Address"></textarea></label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Save customer</button>
+            </div>
+        </form>
+    </div>
+
+    <aside class="form-aside">
+        <h3>Customer profile</h3>
+        <p>Complete identity and contact details before opening accounts or loans.</p>
+        <ul>
+            <li>Assign the correct branch</li>
+            <li>Use a valid national ID</li>
+            <li>Keep phone and email current</li>
+        </ul>
+    </aside>
+</div>

@@ -1,0 +1,70 @@
+@model IEnumerable<BankingManagementSystem.Models.Cheque>
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = "Cheques";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-file-earmark-text"></i> Cheques</h1>
+        <p class="subtitle">Issue, clear, stop, or bounce cheques</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> Issue cheque</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-journal-check"></i> Cheque register</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Account</th>
+                    <th>Payee</th>
+                    <th>Amount</th>
+                    <th>Issued</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in list)
+            {
+                <tr>
+                    <td><code>@c.ChequeNumber</code></td>
+                    <td><code>@c.Account?.AccountNumber</code></td>
+                    <td>@c.PayeeName</td>
+                    <td class="money">@c.Amount.ToString("C")</td>
+                    <td>@c.IssueDate.ToLocalTime().ToString("d")</td>
+                    <td>
+                        <span class="badge @(c.Status == ChequeStatus.Cleared ? "badge-ok" : c.Status == ChequeStatus.Bounced ? "badge-danger" : c.Status == ChequeStatus.Stopped ? "badge-warn" : "")">@c.Status</span>
+                    </td>
+                    <td class="actions">
+                        @if (c.Status == ChequeStatus.Issued)
+                        {
+                            <form asp-action="SetStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@c.ChequeId" />
+                                <input type="hidden" name="status" value="@ChequeStatus.Cleared" />
+                                <button class="btn btn-sm btn-ghost" type="submit">Clear</button>
+                            </form>
+                            <form asp-action="SetStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@c.ChequeId" />
+                                <input type="hidden" name="status" value="@ChequeStatus.Stopped" />
+                                <button class="btn btn-sm btn-ghost" type="submit">Stop</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+@model BankingManagementSystem.ViewModels.NotificationFormViewModel
+@{ ViewData["Title"] = "Post notice"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-bell"></i> Post notice</h1>
+        <p class="subtitle">Send an operational message to the desk</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell single">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Message</p>
+                <div class="form-grid">
+                    <label>Category<input asp-for="Category" placeholder="General / Alert / System" /></label>
+                    <label>Title<input asp-for="Title" /></label>
+                    <label class="span-full">Message<textarea asp-for="Message"></textarea></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Post</button>
+            </div>
+        </form>
+    </div>
+</div>

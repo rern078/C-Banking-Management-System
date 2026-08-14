@@ -1,0 +1,47 @@
+@model BankingManagementSystem.ViewModels.CreateAccountViewModel
+@{ ViewData["Title"] = "Open account"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-wallet2"></i> Open account</h1>
+        <p class="subtitle">Create a new bank account for a customer</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Ownership</p>
+                <div class="form-grid">
+                    <label class="span-full">Customer<select asp-for="CustomerId" asp-items="ViewBag.Customers"><option value="">Select customer</option></select></label>
+                    <label>Account type<select asp-for="AccountTypeId" asp-items="ViewBag.AccountTypes"><option value="">Select type</option></select></label>
+                    <label>Branch<select asp-for="BranchId" asp-items="ViewBag.Branches"><option value="">Select branch</option></select></label>
+                </div>
+            </div>
+            <div class="form-section">
+                <p class="form-section-title">Opening</p>
+                <div class="form-grid">
+                    <label class="span-full">Opening balance<input asp-for="OpeningBalance" type="number" step="0.01" min="0" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Create account</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Account opening</h3>
+        <p>Opening balance must meet the selected account type minimum.</p>
+        <ul>
+            <li>Saving / Current / Fixed Deposit</li>
+            <li>Account number is generated automatically</li>
+            <li>Status starts as Active</li>
+        </ul>
+    </aside>
+</div>

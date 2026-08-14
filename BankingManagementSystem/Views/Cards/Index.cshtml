@@ -1,0 +1,54 @@
+@model IEnumerable<BankingManagementSystem.Models.Card>
+@{
+    ViewData["Title"] = "Cards";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-credit-card-2-front-fill"></i> Cards</h1>
+        <p class="subtitle">Issued debit and credit cards</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> Issue card</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-credit-card"></i> Card register</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Card</th>
+                    <th>Type</th>
+                    <th>Account</th>
+                    <th>Customer</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in list)
+            {
+                <tr>
+                    <td>
+                        <div class="row-main">
+                            <span class="row-icon tone-gold"><i class="bi bi-credit-card-2-front"></i></span>
+                            <code>@c.CardNumber</code>
+                        </div>
+                    </td>
+                    <td>@c.CardType</td>
+                    <td><code>@c.Account?.AccountNumber</code></td>
+                    <td>@c.Account?.Customer?.FullName</td>
+                    <td>@c.ExpiryDate.ToString("MM/yyyy")</td>
+                    <td><span class="badge badge-ok">@c.Status</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

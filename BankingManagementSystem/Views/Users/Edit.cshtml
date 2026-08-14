@@ -1,0 +1,52 @@
+@model BankingManagementSystem.ViewModels.UserEditViewModel
+@using BankingManagementSystem.Models
+@{ ViewData["Title"] = "Edit user"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-pencil-square"></i> Edit user</h1>
+        <p class="subtitle">Change username and staff profile details</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.Id"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-section">
+                <p class="form-section-title">Sign-in</p>
+                <div class="form-grid">
+                    <label>Username<input asp-for="UserName" autocomplete="username" /></label>
+                    <label>Email<input asp-for="Email" /></label>
+                </div>
+            </div>
+            <div class="form-section">
+                <p class="form-section-title">Profile</p>
+                <div class="form-grid">
+                    <label>Full name<input asp-for="FullName" /></label>
+                    <label>Phone<input asp-for="Phone" /></label>
+                    <label>Branch<select asp-for="BranchId" asp-items="ViewBag.Branches"><option value="">No branch</option></select></label>
+                    <label>Status<select asp-for="Status" asp-items="Html.GetEnumSelectList<RecordStatus>()"></select></label>
+                    <label>Role<select asp-for="Role" asp-items="ViewBag.Roles"></select></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Save user</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Admin only</h3>
+        <p>Username is the login name. If it changes, that person must sign in with the new username.</p>
+        <ul>
+            <li>Usernames must be unique</li>
+            <li>Email must be unique</li>
+            <li>Role can be Admin, Manager, or Staff</li>
+        </ul>
+    </aside>
+</div>

@@ -1,0 +1,57 @@
+@model IEnumerable<BankingManagementSystem.Models.Customer>
+@{
+    ViewData["Title"] = "Customers";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-people-fill"></i> Customers</h1>
+        <p class="subtitle">@list.Count customer profile@(list.Count == 1 ? "" : "s")</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-person-plus"></i> New customer</a>
+    </div>
+</div>
+
+<form method="get" class="search-bar">
+    <input type="text" name="q" value="@ViewBag.Q" placeholder="Search code, name, phone" />
+    <button class="btn" type="submit"><i class="bi bi-search"></i> Search</button>
+</form>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-card-list"></i> Customer list</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in list)
+            {
+                <tr>
+                    <td><a asp-action="Details" asp-route-id="@c.CustomerId"><code>@c.CustomerCode</code></a></td>
+                    <td>
+                        <div class="row-main">
+                            <span class="row-icon tone-blue"><i class="bi bi-person-fill"></i></span>
+                            <span>@c.FullName</span>
+                        </div>
+                    </td>
+                    <td>@c.Branch?.BranchName</td>
+                    <td>@(c.Phone ?? "—")</td>
+                    <td><span class="badge badge-ok">@c.Status</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+@model BankingManagementSystem.ViewModels.SettingCreateViewModel
+@{ ViewData["Title"] = "Add setting"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-gear"></i> Add setting</h1>
+        <p class="subtitle">Create a new configuration key</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell single">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Key</p>
+                <div class="form-grid">
+                    <label>Group<input asp-for="GroupName" placeholder="General / Fees / Limits" /></label>
+                    <label>Key<input asp-for="SettingKey" placeholder="BankName" /></label>
+                    <label class="span-full">Value<input asp-for="SettingValue" /></label>
+                    <label class="span-full">Description<input asp-for="Description" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Add setting</button>
+            </div>
+        </form>
+    </div>
+</div>

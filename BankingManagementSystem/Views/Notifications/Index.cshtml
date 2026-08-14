@@ -1,0 +1,67 @@
+@model IEnumerable<BankingManagementSystem.Models.Notification>
+@{
+    ViewData["Title"] = "Notifications";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-bell"></i> Notifications</h1>
+        <p class="subtitle">Staff alerts and operational messages</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> Post notice</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-inbox"></i> Inbox</h2>
+        <span class="badge">@list.Count(n => !n.IsRead) unread</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var n in list)
+            {
+                <tr>
+                    <td>@n.CreatedAt.ToLocalTime().ToString("g")</td>
+                    <td><span class="badge">@n.Category</span></td>
+                    <td>@n.Title</td>
+                    <td>@n.Message</td>
+                    <td>
+                        @if (n.IsRead)
+                        {
+                            <span class="badge badge-ok">Read</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-warn">Unread</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!n.IsRead)
+                        {
+                            <form asp-action="MarkRead" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@n.NotificationId" />
+                                <button class="btn btn-sm btn-ghost" type="submit">Mark read</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

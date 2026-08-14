@@ -1,0 +1,260 @@
+@model BankingManagementSystem.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="subtitle">Today’s cash, products, and items that need a staff action</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-controller="Deposits" asp-action="Create"><i class="bi bi-box-arrow-in-down"></i> Deposit</a>
+        <a class="btn btn-outline" asp-controller="Withdrawals" asp-action="Create"><i class="bi bi-box-arrow-up"></i> Withdraw</a>
+        <a class="btn btn-ghost" asp-controller="Customers" asp-action="Create"><i class="bi bi-person-plus"></i> Customer</a>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <div class="stat-icon tone-teal"><i class="bi bi-building"></i></div>
+        <div>
+            <div class="label">Branches</div>
+            <div class="value">@Model.TotalBranches</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-blue"><i class="bi bi-people-fill"></i></div>
+        <div>
+            <div class="label">Customers</div>
+            <div class="value">@Model.TotalCustomers</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-teal"><i class="bi bi-wallet2"></i></div>
+        <div>
+            <div class="label">Accounts</div>
+            <div class="value">@Model.TotalAccounts</div>
+            <div class="hint">@Model.ActiveAccounts active · @Model.FrozenAccounts frozen</div>
+        </div>
+    </div>
+    <div class="stat stat-wide">
+        <div class="stat-icon tone-gold"><i class="bi bi-currency-dollar"></i></div>
+        <div>
+            <div class="label">Total balances</div>
+            <div class="value money">@Model.TotalBalances.ToString("C")</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-green"><i class="bi bi-cash-stack"></i></div>
+        <div>
+            <div class="label">Loan book</div>
+            <div class="value money">@Model.LoanBook.ToString("C")</div>
+            <div class="hint">@Model.ActiveLoans active · @Model.PendingLoans pending</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-gold"><i class="bi bi-credit-card-2-front-fill"></i></div>
+        <div>
+            <div class="label">Active cards</div>
+            <div class="value">@Model.ActiveCards</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-blue"><i class="bi bi-file-earmark-text"></i></div>
+        <div>
+            <div class="label">Open cheques</div>
+            <div class="value">@Model.OpenCheques</div>
+        </div>
+    </div>
+    <div class="stat">
+        <div class="stat-icon tone-teal"><i class="bi bi-safe"></i></div>
+        <div>
+            <div class="label">Fixed deposits</div>
+            <div class="value">@Model.ActiveFixedDeposits</div>
+        </div>
+    </div>
+</div>
+
+<div class="dash-cash">
+    <div class="cash-card cash-in">
+        <div class="label">Deposits today</div>
+        <div class="value">@Model.DepositAmountToday.ToString("C")</div>
+        <div class="hint">@Model.DepositsToday posting@(Model.DepositsToday == 1 ? "" : "s")</div>
+    </div>
+    <div class="cash-card cash-out">
+        <div class="label">Withdrawals today</div>
+        <div class="value">@Model.WithdrawAmountToday.ToString("C")</div>
+        <div class="hint">@Model.WithdrawalsToday posting@(Model.WithdrawalsToday == 1 ? "" : "s")</div>
+    </div>
+    <div class="cash-card">
+        <div class="label">Transfers today</div>
+        <div class="value">@Model.TransferAmountToday.ToString("C")</div>
+        <div class="hint">@Model.TransfersToday move@(Model.TransfersToday == 1 ? "" : "s")</div>
+    </div>
+    <div class="cash-card">
+        <div class="label">Net cash today</div>
+        <div class="value @(Model.NetCashToday < 0 ? "cash-out" : "cash-in")">@Model.NetCashToday.ToString("C")</div>
+        <div class="hint">@Model.TransactionsToday ledger row@(Model.TransactionsToday == 1 ? "" : "s")</div>
+    </div>
+</div>
+
+@if (Model.FrozenAccounts > 0 || Model.OpenCheques > 0 || Model.PendingLoans > 0 || Model.UnreadNotifications > 0)
+{
+    <div class="attention-row">
+        @if (Model.FrozenAccounts > 0)
+        {
+            <a class="attention-chip danger" asp-controller="Accounts" asp-action="Index" asp-route-status="Frozen">
+                <i class="bi bi-snow"></i> @Model.FrozenAccounts frozen account@(Model.FrozenAccounts == 1 ? "" : "s")
+            </a>
+        }
+        @if (Model.OpenCheques > 0)
+        {
+            <a class="attention-chip warn" asp-controller="Cheques" asp-action="Index">
+                <i class="bi bi-file-earmark-text"></i> @Model.OpenCheques cheque@(Model.OpenCheques == 1 ? "" : "s") waiting to clear
+            </a>
+        }
+        @if (Model.PendingLoans > 0)
+        {
+            <a class="attention-chip warn" asp-controller="Loans" asp-action="Index">
+                <i class="bi bi-hourglass-split"></i> @Model.PendingLoans loan@(Model.PendingLoans == 1 ? "" : "s") pending
+            </a>
+        }
+        @if (Model.UnreadNotifications > 0)
+        {
+            <a class="attention-chip" asp-controller="Notifications" asp-action="Index">
+                <i class="bi bi-bell"></i> @Model.UnreadNotifications unread notice@(Model.UnreadNotifications == 1 ? "" : "s")
+            </a>
+        }
+    </div>
+}
+
+<div class="grid-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-box-arrow-in-down"></i> Recent deposits</h2>
+            <a class="text-link" asp-controller="Deposits" asp-action="Index">View all</a>
+        </div>
+        @if (!Model.RecentDeposits.Any())
+        {
+            <p class="empty-hint">No deposits yet. Post cash from the Deposit button.</p>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
+                    <tbody>
+                    @foreach (var d in Model.RecentDeposits)
+                    {
+                        <tr>
+                            <td>@d.DepositDate.ToLocalTime().ToString("g")</td>
+                            <td>
+                                <code>@d.Account?.AccountNumber</code>
+                                <div class="hint">@d.Account?.Customer?.FullName</div>
+                            </td>
+                            <td><span class="badge">@d.Method</span></td>
+                            <td class="money">@d.Amount.ToString("C")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-box-arrow-up"></i> Recent withdrawals</h2>
+            <a class="text-link" asp-controller="Withdrawals" asp-action="Index">View all</a>
+        </div>
+        @if (!Model.RecentWithdrawals.Any())
+        {
+            <p class="empty-hint">No withdrawals yet.</p>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
+                    <tbody>
+                    @foreach (var w in Model.RecentWithdrawals)
+                    {
+                        <tr>
+                            <td>@w.WithdrawDate.ToLocalTime().ToString("g")</td>
+                            <td>
+                                <code>@w.Account?.AccountNumber</code>
+                                <div class="hint">@w.Account?.Customer?.FullName</div>
+                            </td>
+                            <td><span class="badge">@w.Method</span></td>
+                            <td class="money">@w.Amount.ToString("C")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-people"></i> Recent customers</h2>
+            <a class="text-link" asp-controller="Customers" asp-action="Index">View all</a>
+        </div>
+        @if (!Model.RecentCustomers.Any())
+        {
+            <p class="empty-hint">No customers yet.</p>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Code</th><th>Name</th><th>Branch</th></tr></thead>
+                    <tbody>
+                    @foreach (var c in Model.RecentCustomers)
+                    {
+                        <tr>
+                            <td><a asp-controller="Customers" asp-action="Details" asp-route-id="@c.CustomerId"><code>@c.CustomerCode</code></a></td>
+                            <td>@c.FullName</td>
+                            <td>@c.Branch?.BranchName</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <div class="panel">
+        <div class="panel-head">
+            <h2><i class="bi bi-clock-history"></i> Recent ledger</h2>
+            <a class="text-link" asp-controller="Transactions" asp-action="Index">View all</a>
+        </div>
+        @if (!Model.RecentTransactions.Any())
+        {
+            <p class="empty-hint">No transactions yet.</p>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>When</th><th>Account</th><th>Type</th><th>Amount</th></tr></thead>
+                    <tbody>
+                    @foreach (var t in Model.RecentTransactions)
+                    {
+                        <tr>
+                            <td>@t.TransactionDate.ToLocalTime().ToString("g")</td>
+                            <td>
+                                <code>@t.Account?.AccountNumber</code>
+                                <div class="hint">@t.Account?.Customer?.FullName</div>
+                            </td>
+                            <td><span class="badge">@t.TransactionType</span></td>
+                            <td class="money">@t.Amount.ToString("C")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

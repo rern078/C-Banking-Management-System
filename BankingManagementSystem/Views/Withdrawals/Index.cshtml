@@ -1,0 +1,56 @@
+@model IEnumerable<BankingManagementSystem.Models.Withdrawal>
+@{
+    ViewData["Title"] = "Withdrawals";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-box-arrow-up"></i> Withdrawals</h1>
+        <p class="subtitle">Cash and other debits taken from accounts</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> New withdrawal</a>
+    </div>
+</div>
+
+<form method="get" class="search-bar panel" style="align-items:end;">
+    <label style="margin:0;">Account<input name="accountNumber" value="@ViewBag.AccountNumber" placeholder="BMS..." /></label>
+    <button class="btn" type="submit"><i class="bi bi-funnel"></i> Filter</button>
+</form>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-journal-minus"></i> Withdrawal records</h2>
+        <span class="badge">@list.Count shown</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Account</th>
+                    <th>Customer</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>After</th>
+                    <th>Ref</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var w in list)
+            {
+                <tr>
+                    <td>@w.WithdrawDate.ToLocalTime().ToString("g")</td>
+                    <td><code>@w.Account?.AccountNumber</code></td>
+                    <td>@w.Account?.Customer?.FullName</td>
+                    <td><span class="badge">@w.Method</span></td>
+                    <td class="money">@w.Amount.ToString("C")</td>
+                    <td class="money">@w.BalanceAfter.ToString("C")</td>
+                    <td><code>@w.ReferenceNumber</code></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

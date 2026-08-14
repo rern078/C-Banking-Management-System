@@ -1,0 +1,26 @@
+@model BankingManagementSystem.Models.Customer
+@{ ViewData["Title"] = Model.CustomerCode; }
+<h1 class="page-title">@Model.FullName</h1>
+<p class="subtitle">@Model.CustomerCode · @Model.Branch?.BranchName</p>
+<div class="stats">
+<div class="stat"><div class="label">Phone</div><div class="value" style="font-size:1.1rem;">@(Model.Phone ?? "—")</div></div>
+<div class="stat"><div class="label">Accounts</div><div class="value">@Model.Accounts.Count</div></div>
+<div class="stat"><div class="label">Loans</div><div class="value">@Model.Loans.Count</div></div>
+</div>
+<div class="panel">
+<h2>Accounts</h2>
+<table>
+<thead><tr><th>Number</th><th>Type</th><th>Balance</th><th>Status</th></tr></thead>
+<tbody>
+@foreach (var a in Model.Accounts)
+{
+<tr>
+<td><a asp-controller="Accounts" asp-action="Details" asp-route-id="@a.AccountId"><code>@a.AccountNumber</code></a></td>
+<td>@a.AccountType?.TypeName</td>
+<td class="money">@a.Balance.ToString("C")</td>
+<td><span class="badge">@a.Status</span></td>
+</tr>
+}
+</tbody>
+</table>
+</div>

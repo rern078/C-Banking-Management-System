@@ -1,0 +1,226 @@
+1. Install tools
+winget install Microsoft.DotNet.SDK.8 --accept-package-agreements --accept-source-agreements
+dotnet tool install --global dotnet-ef --version 8.0.11
+
+2. Create / restore project
+cd d:\CHAMRERN\Banking-Management-System\BankingManagementSystem
+dotnet restore
+dotnet build
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 8.0.11
+
+3. Database (EF Core)
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+4. Run the app
+dotnet run --urls http://localhost:5180
+
+5. Check SQL Server tables (optional)
+sqlcmd -S . -E -C -d BankingManagementSystem -Q "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME;"
+
+
+
+
+SHOW ALL COMMENT
+dotnet new mvc -n BankingManagementSystem -o BankingManagementSystem --framework net8.0
+cd BankingManagementSystem
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.11
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.11
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.11
+dotnet add package Microsoft.AspNetCore.Identity.UI --version 8.0.11
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+dotnet run --urls http://localhost:5180
+
+
+run on other computer
+
+dotnet restore
+"DatabaseProvider": "SqlServer",
+"ConnectionStrings": {
+  "SqlServer": "Server=.;Database=BankingManagementSystem;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+}
+dotnet tool install --global dotnet-ef
+dotnet ef database update
+
+"DatabaseProvider": "Sqlite"
+
+dotnet build
+cd BankingManagementSystem
+dotnet restore
+dotnet build
+dotnet run --urls http://localhost:5180
+
+1. Roles
+RoleId          PK
+RoleName
+Description
+CreatedAt
+
+Example:
+
+1 | Admin
+2 | Manager
+3 | Staff
+
+2. Users
+UserId          PK
+RoleId          FK
+BranchId        FK
+Username
+PasswordHash
+FullName
+Email
+Phone
+Status
+CreatedAt
+UpdatedAt
+
+3. Branches
+BranchId        PK
+BranchCode
+BranchName
+Address
+City
+Phone
+Email
+Status
+CreatedAt
+4. Customers
+CustomerId      PK
+CustomerCode
+BranchId        FK
+FirstName
+LastName
+Gender
+DateOfBirth
+NationalId
+Phone
+Email
+Address
+CreatedAt
+UpdatedAt
+Status
+5. AccountTypes
+AccountTypeId   PK
+TypeName
+Description
+MinimumBalance
+InterestRate
+CreatedAt
+
+Example:
+
+1 | Saving
+2 | Current
+3 | Fixed Deposit
+6. Accounts
+AccountId       PK
+CustomerId      FK
+AccountTypeId   FK
+BranchId        FK
+AccountNumber
+Balance
+Currency
+OpenDate
+Status
+CreatedAt
+UpdatedAt
+
+7. Transactions
+TransactionId       PK
+AccountId           FK
+TransactionType
+Amount
+BalanceBefore
+BalanceAfter
+Description
+ReferenceNumber
+TransactionDate
+CreatedBy            FK → Users
+
+TransactionType:
+
+DEPOSIT
+WITHDRAW
+TRANSFER_IN
+TRANSFER_OUT
+FEE
+INTEREST
+
+
+8. Transfers
+TransferId          PK
+FromAccountId       FK
+ToAccountId         FK
+Amount
+TransferFee
+ReferenceNumber
+Description
+Status
+TransferDate
+CreatedBy           FK
+
+Example:
+Account A
+   │
+   │ $500
+   ▼
+Account B
+
+
+9. Loans
+LoanId              PK
+CustomerId          FK
+AccountId           FK
+LoanType
+PrincipalAmount
+InterestRate
+TermMonths
+MonthlyPayment
+StartDate
+EndDate
+RemainingAmount
+Status
+CreatedAt
+
+
+10. LoanPayments
+PaymentId           PK
+LoanId              FK
+PaymentAmount
+PrincipalAmount
+InterestAmount
+RemainingAmount
+PaymentDate
+PaymentMethod
+ReferenceNumber
+CreatedBy            FK
+
+
+11. Cards
+CardId              PK
+AccountId           FK
+CardNumber
+CardType
+IssueDate
+ExpiryDate
+Status
+
+
+12. AuditLogs
+LogId               PK
+UserId              FK
+Action
+TableName
+RecordId
+Description
+IpAddress
+CreatedAt
+
+Example:
+Admin
+  ↓
+Updated Customer #102
+  ↓
+AuditLogs

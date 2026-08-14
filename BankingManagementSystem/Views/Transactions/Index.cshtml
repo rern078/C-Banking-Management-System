@@ -1,0 +1,64 @@
+@model IEnumerable<BankingManagementSystem.Models.Transaction>
+@using BankingManagementSystem.Models
+@{
+    ViewData["Title"] = "Transactions";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-receipt"></i> Transactions</h1>
+        <p class="subtitle">Ledger activity across accounts</p>
+    </div>
+</div>
+
+<form method="get" class="search-bar panel" style="align-items:end;">
+    <label style="margin:0;">Account<input name="accountNumber" value="@ViewBag.AccountNumber" placeholder="BMS..." /></label>
+    <label style="margin:0;">Type
+        <select name="type">
+            <option value="">All</option>
+            @foreach (TxType t in Enum.GetValues(typeof(TxType)))
+            {
+                if (ViewBag.Type is TxType selected && selected == t) { <option value="@t" selected>@t</option> }
+                else { <option value="@t">@t</option> }
+            }
+        </select>
+    </label>
+    <button class="btn" type="submit"><i class="bi bi-funnel"></i> Filter</button>
+</form>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-clock-history"></i> Results</h2>
+        <span class="badge">@list.Count shown</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Account</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>After</th>
+                    <th>Ref</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var t in list)
+            {
+                <tr>
+                    <td>@t.TransactionDate.ToLocalTime().ToString("g")</td>
+                    <td><code>@t.Account?.AccountNumber</code></td>
+                    <td>@t.Account?.Customer?.FullName</td>
+                    <td><span class="badge">@t.TransactionType</span></td>
+                    <td class="money">@t.Amount.ToString("C")</td>
+                    <td class="money">@t.BalanceAfter.ToString("C")</td>
+                    <td><code>@t.ReferenceNumber</code></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

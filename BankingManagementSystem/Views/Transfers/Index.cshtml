@@ -1,0 +1,48 @@
+@model IEnumerable<BankingManagementSystem.Models.Transfer>
+@{
+    ViewData["Title"] = "Transfers";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-arrow-left-right"></i> Transfers</h1>
+        <p class="subtitle">Account-to-account movement history</p>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-send"></i> Transfer records</h2>
+        <span class="badge">@list.Count shown</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>When</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Amount</th>
+                    <th>Fee</th>
+                    <th>Status</th>
+                    <th>Ref</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var t in list)
+            {
+                <tr>
+                    <td>@t.TransferDate.ToLocalTime().ToString("g")</td>
+                    <td><code>@t.FromAccount?.AccountNumber</code></td>
+                    <td><code>@t.ToAccount?.AccountNumber</code></td>
+                    <td class="money">@t.Amount.ToString("C")</td>
+                    <td class="money">@t.TransferFee.ToString("C")</td>
+                    <td><span class="badge badge-ok">@t.Status</span></td>
+                    <td><code>@t.ReferenceNumber</code></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

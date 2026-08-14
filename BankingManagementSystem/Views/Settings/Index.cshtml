@@ -1,0 +1,63 @@
+@model BankingManagementSystem.ViewModels.SettingsPageViewModel
+@{
+    ViewData["Title"] = "Settings";
+    var groups = Model.Items.GroupBy(i => i.GroupName).ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-gear"></i> Settings</h1>
+        <p class="subtitle">Bank configuration stored in the Settings table</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Create"><i class="bi bi-plus-lg"></i> Add setting</a>
+    </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="panel">
+        <p class="empty-hint">No settings yet. Add the first key.</p>
+    </div>
+}
+else
+{
+    <form asp-action="Index" method="post">
+        @Html.AntiForgeryToken()
+        @for (var i = 0; i < Model.Items.Count; i++)
+        {
+            <input type="hidden" asp-for="Items[i].SettingId" />
+            <input type="hidden" asp-for="Items[i].SettingKey" />
+            <input type="hidden" asp-for="Items[i].GroupName" />
+            <input type="hidden" asp-for="Items[i].Description" />
+        }
+
+        @foreach (var group in groups)
+        {
+            <div class="panel" style="margin-bottom:1rem;">
+                <div class="panel-head">
+                    <h2><i class="bi bi-sliders"></i> @group.Key</h2>
+                    <span class="badge">@group.Count() keys</span>
+                </div>
+                <div class="form-grid">
+                    @foreach (var item in group)
+                    {
+                        var index = Model.Items.FindIndex(x => x.SettingId == item.SettingId);
+                        <label class="span-full">
+                            @item.SettingKey
+                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                            {
+                                <span class="form-hint">@item.Description</span>
+                            }
+                            <input asp-for="Items[index].SettingValue" />
+                        </label>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="form-actions" style="max-width:1080px;">
+            <button class="btn" type="submit"><i class="bi bi-check2"></i> Save settings</button>
+        </div>
+    </form>
+}

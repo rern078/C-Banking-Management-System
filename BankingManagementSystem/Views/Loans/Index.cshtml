@@ -1,0 +1,51 @@
+@model IEnumerable<BankingManagementSystem.Models.Loan>
+@{
+    ViewData["Title"] = "Loans";
+    var list = Model.ToList();
+}
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-cash-stack"></i> Loans</h1>
+        <p class="subtitle">Lending portfolio</p>
+    </div>
+    <div class="actions">
+        <a class="btn" asp-action="Create"><i class="bi bi-plus-lg"></i> New loan</a>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h2><i class="bi bi-journal-text"></i> Loan list</h2>
+        <span class="badge">@list.Count total</span>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Principal</th>
+                    <th>Rate</th>
+                    <th>Monthly</th>
+                    <th>Remaining</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var l in list)
+            {
+                <tr>
+                    <td>@l.Customer?.FullName</td>
+                    <td>@l.LoanType</td>
+                    <td class="money">@l.PrincipalAmount.ToString("C")</td>
+                    <td>@l.InterestRate%</td>
+                    <td class="money">@l.MonthlyPayment.ToString("C")</td>
+                    <td class="money">@l.RemainingAmount.ToString("C")</td>
+                    <td><span class="badge">@l.Status</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

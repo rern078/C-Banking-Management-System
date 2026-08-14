@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Chamrern Bank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
+    }
+</head>
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    bool Nav(string name) => string.Equals(controller, name, StringComparison.OrdinalIgnoreCase);
+}
+<body class="@(User.Identity?.IsAuthenticated == true ? "app-shell" : "public-shell")">
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+
+    <aside class="sidebar" id="appSidebar">
+        <div class="sidebar-top">
+            <a class="brand" asp-controller="Dashboard" asp-action="Index">
+                <span class="brand-mark"><i class="bi bi-bank2"></i></span>
+                <span>
+                    <strong>Chamrern Bank</strong>
+                    <small>Operations desk</small>
+                </span>
+            </a>
+            <button type="button" class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-scroll">
+        <div class="nav-label">Overview</div>
+        <nav class="side-nav">
+            <a asp-controller="Dashboard" asp-action="Index" class="@(Nav("Dashboard") ? "active" : null)">
+                <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+            </a>
+        </nav>
+
+        <div class="nav-label">Banking</div>
+        <nav class="side-nav">
+            <a asp-controller="Branches" asp-action="Index" class="@(Nav("Branches") ? "active" : null)">
+                <i class="bi bi-building"></i><span>Branches</span>
+            </a>
+            <a asp-controller="Customers" asp-action="Index" class="@(Nav("Customers") ? "active" : null)">
+                <i class="bi bi-people-fill"></i><span>Customers</span>
+            </a>
+            <a asp-controller="AccountTypes" asp-action="Index" class="@(Nav("AccountTypes") ? "active" : null)">
+                <i class="bi bi-tags-fill"></i><span>Account types</span>
+            </a>
+            <a asp-controller="Accounts" asp-action="Index" class="@(Nav("Accounts") ? "active" : null)">
+                <i class="bi bi-wallet2"></i><span>Accounts</span>
+            </a>
+            <a asp-controller="Deposits" asp-action="Index" class="@(Nav("Deposits") ? "active" : null)">
+                <i class="bi bi-box-arrow-in-down"></i><span>Deposits</span>
+            </a>
+            <a asp-controller="Withdrawals" asp-action="Index" class="@(Nav("Withdrawals") ? "active" : null)">
+                <i class="bi bi-box-arrow-up"></i><span>Withdrawals</span>
+            </a>
+            <a asp-controller="Transactions" asp-action="Index" class="@(Nav("Transactions") ? "active" : null)">
+                <i class="bi bi-receipt"></i><span>Transactions</span>
+            </a>
+            <a asp-controller="Transfers" asp-action="Index" class="@(Nav("Transfers") ? "active" : null)">
+                <i class="bi bi-arrow-left-right"></i><span>Transfers</span>
+            </a>
+        </nav>
+
+        <div class="nav-label">Products</div>
+        <nav class="side-nav">
+            <a asp-controller="Loans" asp-action="Index" class="@(Nav("Loans") ? "active" : null)">
+                <i class="bi bi-cash-stack"></i><span>Loans</span>
+            </a>
+            <a asp-controller="Cards" asp-action="Index" class="@(Nav("Cards") ? "active" : null)">
+                <i class="bi bi-credit-card-2-front-fill"></i><span>Cards</span>
+            </a>
+            <a asp-controller="FixedDeposits" asp-action="Index" class="@(Nav("FixedDeposits") ? "active" : null)">
+                <i class="bi bi-safe"></i><span>Fixed deposits</span>
+            </a>
+            <a asp-controller="Cheques" asp-action="Index" class="@(Nav("Cheques") ? "active" : null)">
+                <i class="bi bi-file-earmark-text"></i><span>Cheques</span>
+            </a>
+        </nav>
+
+        <div class="nav-label">Operations</div>
+        <nav class="side-nav">
+            <a asp-controller="Beneficiaries" asp-action="Index" class="@(Nav("Beneficiaries") ? "active" : null)">
+                <i class="bi bi-person-check"></i><span>Beneficiaries</span>
+            </a>
+            <a asp-controller="Notifications" asp-action="Index" class="@(Nav("Notifications") ? "active" : null)">
+                <i class="bi bi-bell"></i><span>Notifications</span>
+            </a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <a asp-controller="Users" asp-action="Index" class="@(Nav("Users") ? "active" : null)">
+                    <i class="bi bi-person-badge"></i><span>Users</span>
+                </a>
+                <a asp-controller="AuditLogs" asp-action="Index" class="@(Nav("AuditLogs") ? "active" : null)">
+                    <i class="bi bi-shield-check"></i><span>Audit logs</span>
+                </a>
+                <a asp-controller="Settings" asp-action="Index" class="@(Nav("Settings") ? "active" : null)">
+                    <i class="bi bi-gear"></i><span>Settings</span>
+                </a>
+            }
+        </nav>
+        </div>
+
+        <form asp-controller="Account" asp-action="Logout" method="post" class="sidebar-footer">
+            @Html.AntiForgeryToken()
+            <div class="user-chip">
+                <span class="user-avatar"><i class="bi bi-person-fill"></i></span>
+                <span class="user-meta">
+                    <strong>@User.Identity?.Name</strong>
+                    <small>Signed in</small>
+                </span>
+            </div>
+            <button type="submit" class="btn-logout"><i class="bi bi-box-arrow-right"></i> Sign out</button>
+        </form>
+    </aside>
+
+    <div class="main-wrap">
+        <header class="topbar compact">
+            <div class="topbar-inner">
+                <div class="topbar-left">
+                    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-controls="appSidebar" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="topbar-title">
+                        <span class="crumb">Banking system</span>
+                        <strong>@ViewData["Title"]</strong>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <a class="icon-btn" asp-controller="Customers" asp-action="Create" title="New customer"><i class="bi bi-person-plus"></i></a>
+                    <a class="icon-btn" asp-controller="Accounts" asp-action="Create" title="Open account"><i class="bi bi-plus-circle"></i></a>
+                    <span class="topbar-user"><i class="bi bi-person-circle"></i> @User.Identity?.Name</span>
+                </div>
+            </div>
+        </header>
+        <main class="page">
+            @if (TempData["Success"] is string success) { <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @success</div> }
+            @if (TempData["Error"] is string error) { <div class="alert alert-error"><i class="bi bi-exclamation-triangle-fill"></i> @error</div> }
+            @RenderBody()
+        </main>
+        <footer class="app-footer">
+            <div class="app-footer-inner">
+                <div class="app-footer-brand">
+                    <i class="bi bi-bank2"></i>
+                    <div>
+                        <strong>Chamrern Bank</strong>
+                        <small>Operations desk · Staff portal</small>
+                    </div>
+                </div>
+                <nav class="app-footer-links">
+                    <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    <a asp-controller="Notifications" asp-action="Index">Notifications</a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a asp-controller="Settings" asp-action="Index">Settings</a>
+                    }
+                </nav>
+                <p class="app-footer-copy">© @DateTime.Now.Year Chamrern Bank. Internal use only.</p>
+            </div>
+        </footer>
+    </div>
+}
+else
+{
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand public-brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark"><i class="bi bi-bank2"></i></span>
+                <span class="brand-text">Chamrern Bank</span>
+            </a>
+            <nav class="nav">
+                <a class="btn btn-sm" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Sign in</a>
+            </nav>
+        </div>
+    </header>
+    <main class="page">
+        @RenderBody()
+    </main>
+}
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/datatables-init.js" asp-append-version="true"></script>
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

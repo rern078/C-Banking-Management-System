@@ -1,0 +1,23 @@
+@{
+    var year = DateTime.Now.Year;
+}
+<footer class="app-footer">
+    <div class="app-footer-inner">
+        <div class="app-footer-brand">
+            <i class="bi bi-bank2"></i>
+            <div>
+                <strong>Chamrern Bank</strong>
+                <small>Operations desk · Staff portal</small>
+            </div>
+        </div>
+        <nav class="app-footer-links">
+            <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a asp-controller="Notifications" asp-action="Index">Notifications</a>
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <a asp-controller="Settings" asp-action="Index">Settings</a>
+            }
+        </nav>
+        <p class="app-footer-copy">© @year Chamrern Bank. Internal use only.</p>
+    </div>
+</footer>

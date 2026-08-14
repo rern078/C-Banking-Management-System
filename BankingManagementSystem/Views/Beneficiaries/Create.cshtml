@@ -1,0 +1,43 @@
+@model BankingManagementSystem.ViewModels.BeneficiaryFormViewModel
+@{ ViewData["Title"] = "Add beneficiary"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-person-check"></i> Add beneficiary</h1>
+        <p class="subtitle">Save a payee for a customer</p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Index"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell">
+    <div class="panel form-main">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <div class="form-section">
+                <p class="form-section-title">Payee</p>
+                <div class="form-grid">
+                    <label class="span-full">Customer<select asp-for="CustomerId" asp-items="ViewBag.Customers"><option value="">Select customer</option></select></label>
+                    <label>Nickname<input asp-for="Nickname" placeholder="Family / supplier" /></label>
+                    <label>Phone<input asp-for="Phone" /></label>
+                    <label>Account number<input asp-for="AccountNumber" /></label>
+                    <label>Bank name<input asp-for="BankName" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Index">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Save</button>
+            </div>
+        </form>
+    </div>
+    <aside class="form-aside">
+        <h3>Why save payees?</h3>
+        <p>Staff can pick a known account instead of typing numbers each transfer.</p>
+        <ul>
+            <li>Link to the owning customer</li>
+            <li>Use a clear nickname</li>
+            <li>Internal or other-bank accounts</li>
+        </ul>
+    </aside>
+</div>

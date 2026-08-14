@@ -1,0 +1,41 @@
+@model BankingManagementSystem.ViewModels.MoneyActionViewModel
+@{ ViewData["Title"] = "Deposit"; }
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title"><i class="bi bi-plus-circle"></i> Deposit</h1>
+        <p class="subtitle">Account <code>@Model.AccountNumber</code></p>
+    </div>
+    <div class="actions">
+        <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.AccountId"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="form-shell single">
+    <div class="panel form-main">
+        <form asp-action="Deposit" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <input type="hidden" asp-for="AccountId" />
+            <div class="form-section">
+                <p class="form-section-title">Transaction</p>
+                <div class="form-grid">
+                    <label>Amount<input asp-for="Amount" type="number" step="0.01" min="0.01" placeholder="0.00" /></label>
+                    <label>Method
+                        <select asp-for="Method">
+                            <option>Cash</option>
+                            <option>Cheque</option>
+                            <option>Transfer</option>
+                            <option>ATM</option>
+                            <option>Other</option>
+                        </select>
+                    </label>
+                    <label class="span-full">Description<input asp-for="Description" placeholder="Optional note" /></label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-outline" asp-action="Details" asp-route-id="@Model.AccountId">Cancel</a>
+                <button class="btn" type="submit"><i class="bi bi-check2"></i> Confirm deposit</button>
+            </div>
+        </form>
+    </div>
+</div>
