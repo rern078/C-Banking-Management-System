@@ -54,7 +54,23 @@ public class SettingsController : Controller
         {
             var row = existing.FirstOrDefault(s => s.SettingId == item.SettingId);
             if (row is null) continue;
-            row.SettingValue = item.SettingValue?.Trim() ?? string.Empty;
+
+            var isToggle = string.Equals(row.GroupName, "Dashboard", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(row.SettingValue, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(row.SettingValue, "false", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(item.SettingValue, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (isToggle)
+            {
+                row.SettingValue = string.Equals(item.SettingValue, "true", StringComparison.OrdinalIgnoreCase)
+                    ? "true"
+                    : "false";
+            }
+            else
+            {
+                row.SettingValue = item.SettingValue?.Trim() ?? string.Empty;
+            }
+
             row.UpdatedAt = DateTime.UtcNow;
             row.UpdatedBy = userId;
         }

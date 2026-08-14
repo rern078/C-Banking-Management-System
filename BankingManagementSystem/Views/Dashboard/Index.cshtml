@@ -1,6 +1,8 @@
 @model BankingManagementSystem.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
+    var showDepositWithdraw = Model.ShowRecentDeposits || Model.ShowRecentWithdrawals;
+    var showCustomerLedger = Model.ShowRecentCustomers || Model.ShowRecentLedger;
 }
 
 <div class="page-head">
@@ -12,140 +14,153 @@
         <a class="btn" asp-controller="Deposits" asp-action="Create"><i class="bi bi-box-arrow-in-down"></i> Deposit</a>
         <a class="btn btn-outline" asp-controller="Withdrawals" asp-action="Create"><i class="bi bi-box-arrow-up"></i> Withdraw</a>
         <a class="btn btn-ghost" asp-controller="Customers" asp-action="Create"><i class="bi bi-person-plus"></i> Customer</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <a class="btn btn-ghost" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear"></i> Sections</a>
+        }
     </div>
 </div>
 
-<div class="stats">
-    <div class="stat">
-        <div class="stat-icon tone-teal"><i class="bi bi-building"></i></div>
-        <div>
-            <div class="label">Branches</div>
-            <div class="value">@Model.TotalBranches</div>
+@if (Model.ShowStats)
+{
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-icon tone-teal"><i class="bi bi-building"></i></div>
+            <div>
+                <div class="label">Branches</div>
+                <div class="value">@Model.TotalBranches</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-blue"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <div class="label">Customers</div>
+                <div class="value">@Model.TotalCustomers</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-teal"><i class="bi bi-wallet2"></i></div>
+            <div>
+                <div class="label">Accounts</div>
+                <div class="value">@Model.TotalAccounts</div>
+                <div class="hint">@Model.ActiveAccounts active · @Model.FrozenAccounts frozen</div>
+            </div>
+        </div>
+        <div class="stat stat-wide">
+            <div class="stat-icon tone-gold"><i class="bi bi-currency-dollar"></i></div>
+            <div>
+                <div class="label">Total balances</div>
+                <div class="value money">@Model.TotalBalances.ToString("C")</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-green"><i class="bi bi-cash-stack"></i></div>
+            <div>
+                <div class="label">Loan book</div>
+                <div class="value money">@Model.LoanBook.ToString("C")</div>
+                <div class="hint">@Model.ActiveLoans active · @Model.PendingLoans pending</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-gold"><i class="bi bi-credit-card-2-front-fill"></i></div>
+            <div>
+                <div class="label">Active cards</div>
+                <div class="value">@Model.ActiveCards</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-blue"><i class="bi bi-file-earmark-text"></i></div>
+            <div>
+                <div class="label">Open cheques</div>
+                <div class="value">@Model.OpenCheques</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-icon tone-teal"><i class="bi bi-safe"></i></div>
+            <div>
+                <div class="label">Fixed deposits</div>
+                <div class="value">@Model.ActiveFixedDeposits</div>
+            </div>
         </div>
     </div>
-    <div class="stat">
-        <div class="stat-icon tone-blue"><i class="bi bi-people-fill"></i></div>
-        <div>
-            <div class="label">Customers</div>
-            <div class="value">@Model.TotalCustomers</div>
-        </div>
-    </div>
-    <div class="stat">
-        <div class="stat-icon tone-teal"><i class="bi bi-wallet2"></i></div>
-        <div>
-            <div class="label">Accounts</div>
-            <div class="value">@Model.TotalAccounts</div>
-            <div class="hint">@Model.ActiveAccounts active · @Model.FrozenAccounts frozen</div>
-        </div>
-    </div>
-    <div class="stat stat-wide">
-        <div class="stat-icon tone-gold"><i class="bi bi-currency-dollar"></i></div>
-        <div>
-            <div class="label">Total balances</div>
-            <div class="value money">@Model.TotalBalances.ToString("C")</div>
-        </div>
-    </div>
-    <div class="stat">
-        <div class="stat-icon tone-green"><i class="bi bi-cash-stack"></i></div>
-        <div>
-            <div class="label">Loan book</div>
-            <div class="value money">@Model.LoanBook.ToString("C")</div>
-            <div class="hint">@Model.ActiveLoans active · @Model.PendingLoans pending</div>
-        </div>
-    </div>
-    <div class="stat">
-        <div class="stat-icon tone-gold"><i class="bi bi-credit-card-2-front-fill"></i></div>
-        <div>
-            <div class="label">Active cards</div>
-            <div class="value">@Model.ActiveCards</div>
-        </div>
-    </div>
-    <div class="stat">
-        <div class="stat-icon tone-blue"><i class="bi bi-file-earmark-text"></i></div>
-        <div>
-            <div class="label">Open cheques</div>
-            <div class="value">@Model.OpenCheques</div>
-        </div>
-    </div>
-    <div class="stat">
-        <div class="stat-icon tone-teal"><i class="bi bi-safe"></i></div>
-        <div>
-            <div class="label">Fixed deposits</div>
-            <div class="value">@Model.ActiveFixedDeposits</div>
-        </div>
-    </div>
-</div>
+}
 
-<div class="dash-cash">
-    <div class="cash-card cash-in">
-        <div class="label">Deposits today</div>
-        <div class="value">@Model.DepositAmountToday.ToString("C")</div>
-        <div class="hint">@Model.DepositsToday posting@(Model.DepositsToday == 1 ? "" : "s")</div>
+@if (Model.ShowCashToday)
+{
+    <div class="dash-cash">
+        <div class="cash-card cash-in">
+            <div class="label">Deposits today</div>
+            <div class="value">@Model.DepositAmountToday.ToString("C")</div>
+            <div class="hint">@Model.DepositsToday posting@(Model.DepositsToday == 1 ? "" : "s")</div>
+        </div>
+        <div class="cash-card cash-out">
+            <div class="label">Withdrawals today</div>
+            <div class="value">@Model.WithdrawAmountToday.ToString("C")</div>
+            <div class="hint">@Model.WithdrawalsToday posting@(Model.WithdrawalsToday == 1 ? "" : "s")</div>
+        </div>
+        <div class="cash-card">
+            <div class="label">Transfers today</div>
+            <div class="value">@Model.TransferAmountToday.ToString("C")</div>
+            <div class="hint">@Model.TransfersToday move@(Model.TransfersToday == 1 ? "" : "s")</div>
+        </div>
+        <div class="cash-card">
+            <div class="label">Net cash today</div>
+            <div class="value @(Model.NetCashToday < 0 ? "cash-out" : "cash-in")">@Model.NetCashToday.ToString("C")</div>
+            <div class="hint">@Model.TransactionsToday ledger row@(Model.TransactionsToday == 1 ? "" : "s")</div>
+        </div>
     </div>
-    <div class="cash-card cash-out">
-        <div class="label">Withdrawals today</div>
-        <div class="value">@Model.WithdrawAmountToday.ToString("C")</div>
-        <div class="hint">@Model.WithdrawalsToday posting@(Model.WithdrawalsToday == 1 ? "" : "s")</div>
-    </div>
-    <div class="cash-card">
-        <div class="label">Transfers today</div>
-        <div class="value">@Model.TransferAmountToday.ToString("C")</div>
-        <div class="hint">@Model.TransfersToday move@(Model.TransfersToday == 1 ? "" : "s")</div>
-    </div>
-    <div class="cash-card">
-        <div class="label">Net cash today</div>
-        <div class="value @(Model.NetCashToday < 0 ? "cash-out" : "cash-in")">@Model.NetCashToday.ToString("C")</div>
-        <div class="hint">@Model.TransactionsToday ledger row@(Model.TransactionsToday == 1 ? "" : "s")</div>
-    </div>
-</div>
+}
 
-<div class="panel gc-panel" id="graphCalc">
-    <div class="panel-head">
-        <h2><i class="bi bi-graph-up"></i> Graphing calculator</h2>
-        <span class="gc-cursor" id="gcCursor"></span>
-    </div>
-    <p class="subtitle gc-help">Plot <code>y</code> as a function of <code>x</code>. Supports <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>sqrt</code>, <code>abs</code>, <code>log</code>, <code>ln</code>, <code>exp</code>, <code>pi</code>, and <code>^</code>.</p>
+@if (Model.ShowGraphingCalculator)
+{
+    <div class="panel gc-panel" id="graphCalc">
+        <div class="panel-head">
+            <h2><i class="bi bi-graph-up"></i> Graphing calculator</h2>
+            <span class="gc-cursor" id="gcCursor"></span>
+        </div>
+        <p class="subtitle gc-help">Plot <code>y</code> as a function of <code>x</code>. Supports <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>sqrt</code>, <code>abs</code>, <code>log</code>, <code>ln</code>, <code>exp</code>, <code>pi</code>, and <code>^</code>.</p>
 
-    <div class="gc-layout">
-        <div class="gc-controls">
-            <label class="gc-field">
-                <span>Expression y =</span>
-                <input id="gcExpr" type="text" value="x^2" autocomplete="off" spellcheck="false" />
-            </label>
+        <div class="gc-layout">
+            <div class="gc-controls">
+                <label class="gc-field">
+                    <span>Expression y =</span>
+                    <input id="gcExpr" type="text" value="x^2" autocomplete="off" spellcheck="false" />
+                </label>
 
-            <div class="gc-range">
-                <label class="gc-field"><span>X min</span><input id="gcXmin" type="number" step="any" value="-10" /></label>
-                <label class="gc-field"><span>X max</span><input id="gcXmax" type="number" step="any" value="10" /></label>
-                <label class="gc-field"><span>Y min</span><input id="gcYmin" type="number" step="any" value="-10" /></label>
-                <label class="gc-field"><span>Y max</span><input id="gcYmax" type="number" step="any" value="10" /></label>
+                <div class="gc-range">
+                    <label class="gc-field"><span>X min</span><input id="gcXmin" type="number" step="any" value="-10" /></label>
+                    <label class="gc-field"><span>X max</span><input id="gcXmax" type="number" step="any" value="10" /></label>
+                    <label class="gc-field"><span>Y min</span><input id="gcYmin" type="number" step="any" value="-10" /></label>
+                    <label class="gc-field"><span>Y max</span><input id="gcYmax" type="number" step="any" value="10" /></label>
+                </div>
+
+                <div class="gc-actions">
+                    <button type="button" class="btn" id="gcPlot"><i class="bi bi-play-fill"></i> Plot</button>
+                    <button type="button" class="btn btn-ghost" id="gcClear"><i class="bi bi-eraser"></i> Clear</button>
+                </div>
+
+                <div class="gc-presets">
+                    <button type="button" class="gc-chip" data-expr="x^2" data-xmin="-5" data-xmax="5" data-ymin="-1" data-ymax="25">x²</button>
+                    <button type="button" class="gc-chip" data-expr="sin(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">sin(x)</button>
+                    <button type="button" class="gc-chip" data-expr="cos(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">cos(x)</button>
+                    <button type="button" class="gc-chip" data-expr="abs(x)" data-xmin="-8" data-xmax="8" data-ymin="-1" data-ymax="8">|x|</button>
+                    <button type="button" class="gc-chip" data-expr="sqrt(x)" data-xmin="0" data-xmax="16" data-ymin="-1" data-ymax="5">√x</button>
+                    <button type="button" class="gc-chip" data-expr="1000*(1.05)^x" data-xmin="0" data-xmax="20" data-ymin="0" data-ymax="3000">Compound 5%</button>
+                    <button type="button" class="gc-chip" data-expr="50000*exp(-0.08*x)" data-xmin="0" data-xmax="30" data-ymin="0" data-ymax="55000">Loan decay</button>
+                    <button type="button" class="gc-chip" data-expr="x^3 - 3*x" data-xmin="-3" data-xmax="3" data-ymin="-4" data-ymax="4">x³ − 3x</button>
+                </div>
+
+                <p class="gc-status" id="gcStatus">Ready. Enter an expression in x.</p>
             </div>
 
-            <div class="gc-actions">
-                <button type="button" class="btn" id="gcPlot"><i class="bi bi-play-fill"></i> Plot</button>
-                <button type="button" class="btn btn-ghost" id="gcClear"><i class="bi bi-eraser"></i> Clear</button>
+            <div class="gc-stage">
+                <canvas id="gcCanvas" aria-label="Function graph"></canvas>
             </div>
-
-            <div class="gc-presets">
-                <button type="button" class="gc-chip" data-expr="x^2" data-xmin="-5" data-xmax="5" data-ymin="-1" data-ymax="25">x²</button>
-                <button type="button" class="gc-chip" data-expr="sin(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">sin(x)</button>
-                <button type="button" class="gc-chip" data-expr="cos(x)" data-xmin="-6.28" data-xmax="6.28" data-ymin="-1.5" data-ymax="1.5">cos(x)</button>
-                <button type="button" class="gc-chip" data-expr="abs(x)" data-xmin="-8" data-xmax="8" data-ymin="-1" data-ymax="8">|x|</button>
-                <button type="button" class="gc-chip" data-expr="sqrt(x)" data-xmin="0" data-xmax="16" data-ymin="-1" data-ymax="5">√x</button>
-                <button type="button" class="gc-chip" data-expr="1000*(1.05)^x" data-xmin="0" data-xmax="20" data-ymin="0" data-ymax="3000">Compound 5%</button>
-                <button type="button" class="gc-chip" data-expr="50000*exp(-0.08*x)" data-xmin="0" data-xmax="30" data-ymin="0" data-ymax="55000">Loan decay</button>
-                <button type="button" class="gc-chip" data-expr="x^3 - 3*x" data-xmin="-3" data-xmax="3" data-ymin="-4" data-ymax="4">x³ − 3x</button>
-            </div>
-
-            <p class="gc-status" id="gcStatus">Ready. Enter an expression in x.</p>
-        </div>
-
-        <div class="gc-stage">
-            <canvas id="gcCanvas" aria-label="Function graph"></canvas>
         </div>
     </div>
-</div>
+}
 
-@if (Model.FrozenAccounts > 0 || Model.OpenCheques > 0 || Model.PendingLoans > 0 || Model.UnreadNotifications > 0)
+@if (Model.ShowAttention && (Model.FrozenAccounts > 0 || Model.OpenCheques > 0 || Model.PendingLoans > 0 || Model.UnreadNotifications > 0))
 {
     <div class="attention-row">
         @if (Model.FrozenAccounts > 0)
@@ -175,136 +190,157 @@
     </div>
 }
 
-<div class="grid-2">
-    <div class="panel">
-        <div class="panel-head">
-            <h2><i class="bi bi-box-arrow-in-down"></i> Recent deposits</h2>
-            <a class="text-link" asp-controller="Deposits" asp-action="Index">View all</a>
-        </div>
-        @if (!Model.RecentDeposits.Any())
+@if (showDepositWithdraw)
+{
+    <div class="@(Model.ShowRecentDeposits && Model.ShowRecentWithdrawals ? "grid-2" : null)">
+        @if (Model.ShowRecentDeposits)
         {
-            <p class="empty-hint">No deposits yet. Post cash from the Deposit button.</p>
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-box-arrow-in-down"></i> Recent deposits</h2>
+                    <a class="text-link" asp-controller="Deposits" asp-action="Index">View all</a>
+                </div>
+                @if (!Model.RecentDeposits.Any())
+                {
+                    <p class="empty-hint">No deposits yet. Post cash from the Deposit button.</p>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
+                            <tbody>
+                            @foreach (var d in Model.RecentDeposits)
+                            {
+                                <tr>
+                                    <td>@d.DepositDate.ToLocalTime().ToString("g")</td>
+                                    <td>
+                                        <code>@d.Account?.AccountNumber</code>
+                                        <div class="hint">@d.Account?.Customer?.FullName</div>
+                                    </td>
+                                    <td><span class="badge">@d.Method</span></td>
+                                    <td class="money">@d.Amount.ToString("C")</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
         }
-        else
+        @if (Model.ShowRecentWithdrawals)
         {
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
-                    <tbody>
-                    @foreach (var d in Model.RecentDeposits)
-                    {
-                        <tr>
-                            <td>@d.DepositDate.ToLocalTime().ToString("g")</td>
-                            <td>
-                                <code>@d.Account?.AccountNumber</code>
-                                <div class="hint">@d.Account?.Customer?.FullName</div>
-                            </td>
-                            <td><span class="badge">@d.Method</span></td>
-                            <td class="money">@d.Amount.ToString("C")</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-box-arrow-up"></i> Recent withdrawals</h2>
+                    <a class="text-link" asp-controller="Withdrawals" asp-action="Index">View all</a>
+                </div>
+                @if (!Model.RecentWithdrawals.Any())
+                {
+                    <p class="empty-hint">No withdrawals yet.</p>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
+                            <tbody>
+                            @foreach (var w in Model.RecentWithdrawals)
+                            {
+                                <tr>
+                                    <td>@w.WithdrawDate.ToLocalTime().ToString("g")</td>
+                                    <td>
+                                        <code>@w.Account?.AccountNumber</code>
+                                        <div class="hint">@w.Account?.Customer?.FullName</div>
+                                    </td>
+                                    <td><span class="badge">@w.Method</span></td>
+                                    <td class="money">@w.Amount.ToString("C")</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
         }
     </div>
-    <div class="panel">
-        <div class="panel-head">
-            <h2><i class="bi bi-box-arrow-up"></i> Recent withdrawals</h2>
-            <a class="text-link" asp-controller="Withdrawals" asp-action="Index">View all</a>
-        </div>
-        @if (!Model.RecentWithdrawals.Any())
-        {
-            <p class="empty-hint">No withdrawals yet.</p>
-        }
-        else
-        {
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>When</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
-                    <tbody>
-                    @foreach (var w in Model.RecentWithdrawals)
-                    {
-                        <tr>
-                            <td>@w.WithdrawDate.ToLocalTime().ToString("g")</td>
-                            <td>
-                                <code>@w.Account?.AccountNumber</code>
-                                <div class="hint">@w.Account?.Customer?.FullName</div>
-                            </td>
-                            <td><span class="badge">@w.Method</span></td>
-                            <td class="money">@w.Amount.ToString("C")</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-        }
-    </div>
-</div>
+}
 
-<div class="grid-2">
-    <div class="panel">
-        <div class="panel-head">
-            <h2><i class="bi bi-people"></i> Recent customers</h2>
-            <a class="text-link" asp-controller="Customers" asp-action="Index">View all</a>
-        </div>
-        @if (!Model.RecentCustomers.Any())
+@if (showCustomerLedger)
+{
+    <div class="@(Model.ShowRecentCustomers && Model.ShowRecentLedger ? "grid-2" : null)">
+        @if (Model.ShowRecentCustomers)
         {
-            <p class="empty-hint">No customers yet.</p>
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-people"></i> Recent customers</h2>
+                    <a class="text-link" asp-controller="Customers" asp-action="Index">View all</a>
+                </div>
+                @if (!Model.RecentCustomers.Any())
+                {
+                    <p class="empty-hint">No customers yet.</p>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Code</th><th>Name</th><th>Branch</th></tr></thead>
+                            <tbody>
+                            @foreach (var c in Model.RecentCustomers)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Customers" asp-action="Details" asp-route-id="@c.CustomerId"><code>@c.CustomerCode</code></a></td>
+                                    <td>@c.FullName</td>
+                                    <td>@c.Branch?.BranchName</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
         }
-        else
+        @if (Model.ShowRecentLedger)
         {
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Code</th><th>Name</th><th>Branch</th></tr></thead>
-                    <tbody>
-                    @foreach (var c in Model.RecentCustomers)
-                    {
-                        <tr>
-                            <td><a asp-controller="Customers" asp-action="Details" asp-route-id="@c.CustomerId"><code>@c.CustomerCode</code></a></td>
-                            <td>@c.FullName</td>
-                            <td>@c.Branch?.BranchName</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-clock-history"></i> Recent ledger</h2>
+                    <a class="text-link" asp-controller="Transactions" asp-action="Index">View all</a>
+                </div>
+                @if (!Model.RecentTransactions.Any())
+                {
+                    <p class="empty-hint">No transactions yet.</p>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>When</th><th>Account</th><th>Type</th><th>Amount</th></tr></thead>
+                            <tbody>
+                            @foreach (var t in Model.RecentTransactions)
+                            {
+                                <tr>
+                                    <td>@t.TransactionDate.ToLocalTime().ToString("g")</td>
+                                    <td>
+                                        <code>@t.Account?.AccountNumber</code>
+                                        <div class="hint">@t.Account?.Customer?.FullName</div>
+                                    </td>
+                                    <td><span class="badge">@t.TransactionType</span></td>
+                                    <td class="money">@t.Amount.ToString("C")</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
         }
     </div>
-    <div class="panel">
-        <div class="panel-head">
-            <h2><i class="bi bi-clock-history"></i> Recent ledger</h2>
-            <a class="text-link" asp-controller="Transactions" asp-action="Index">View all</a>
-        </div>
-        @if (!Model.RecentTransactions.Any())
-        {
-            <p class="empty-hint">No transactions yet.</p>
-        }
-        else
-        {
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>When</th><th>Account</th><th>Type</th><th>Amount</th></tr></thead>
-                    <tbody>
-                    @foreach (var t in Model.RecentTransactions)
-                    {
-                        <tr>
-                            <td>@t.TransactionDate.ToLocalTime().ToString("g")</td>
-                            <td>
-                                <code>@t.Account?.AccountNumber</code>
-                                <div class="hint">@t.Account?.Customer?.FullName</div>
-                            </td>
-                            <td><span class="badge">@t.TransactionType</span></td>
-                            <td class="money">@t.Amount.ToString("C")</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-        }
-    </div>
-</div>
+}
 
 @section Scripts {
-    <script src="~/js/graphing-calculator.js" asp-append-version="true"></script>
+    @if (Model.ShowGraphingCalculator)
+    {
+        <script src="~/js/graphing-calculator.js" asp-append-version="true"></script>
+    }
 }

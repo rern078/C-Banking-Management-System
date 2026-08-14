@@ -327,6 +327,15 @@ public static class DbSeeder
             await db.SaveChangesAsync();
         }
 
+        await EnsureSettingAsync(db, "DashShowStats", "true", "Dashboard", "Show summary stats on the dashboard");
+        await EnsureSettingAsync(db, "DashShowCashToday", "true", "Dashboard", "Show deposits, withdrawals, transfers, and net cash today");
+        await EnsureSettingAsync(db, "DashShowAttention", "true", "Dashboard", "Show attention chips for frozen accounts, cheques, loans, and notices");
+        await EnsureSettingAsync(db, "DashShowGraphingCalculator", "true", "Dashboard", "Show the graphing calculator panel");
+        await EnsureSettingAsync(db, "DashShowRecentDeposits", "true", "Dashboard", "Show the recent deposits table");
+        await EnsureSettingAsync(db, "DashShowRecentWithdrawals", "true", "Dashboard", "Show the recent withdrawals table");
+        await EnsureSettingAsync(db, "DashShowRecentCustomers", "true", "Dashboard", "Show the recent customers table");
+        await EnsureSettingAsync(db, "DashShowRecentLedger", "true", "Dashboard", "Show the recent ledger table");
+
         var seededAccounts = await db.Accounts.OrderBy(a => a.AccountNumber).ToListAsync();
         var demoDeposits = new (string Ref, string AccountNumber, decimal Amount, string Method, string Description, int DaysAgo)[]
         {
@@ -425,6 +434,25 @@ public static class DbSeeder
                 CreatedBy = admin?.Id
             });
         }
+        await db.SaveChangesAsync();
+    }
+
+    private static async Task EnsureSettingAsync(
+        ApplicationDbContext db,
+        string key,
+        string value,
+        string group,
+        string description)
+    {
+        if (await db.Settings.AnyAsync(s => s.SettingKey == key)) return;
+        db.Settings.Add(new Setting
+        {
+            SettingKey = key,
+            SettingValue = value,
+            GroupName = group,
+            Description = description,
+            UpdatedAt = DateTime.UtcNow
+        });
         await db.SaveChangesAsync();
     }
 }

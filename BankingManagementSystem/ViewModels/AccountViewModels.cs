@@ -74,6 +74,15 @@ public class DashboardViewModel
     public List<Customer> RecentCustomers { get; set; } = new();
     public List<Deposit> RecentDeposits { get; set; } = new();
     public List<Withdrawal> RecentWithdrawals { get; set; } = new();
+
+    public bool ShowStats { get; set; } = true;
+    public bool ShowCashToday { get; set; } = true;
+    public bool ShowAttention { get; set; } = true;
+    public bool ShowGraphingCalculator { get; set; } = true;
+    public bool ShowRecentDeposits { get; set; } = true;
+    public bool ShowRecentWithdrawals { get; set; } = true;
+    public bool ShowRecentCustomers { get; set; } = true;
+    public bool ShowRecentLedger { get; set; } = true;
 }
 
 public class CustomerFormViewModel
@@ -259,6 +268,29 @@ public class SettingItemViewModel
     public string SettingValue { get; set; } = string.Empty;
     public string GroupName { get; set; } = "General";
     public string? Description { get; set; }
+
+    public bool IsToggle =>
+        string.Equals(GroupName, "Dashboard", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(SettingValue, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(SettingValue, "false", StringComparison.OrdinalIgnoreCase);
+
+    public bool IsEnabled =>
+        string.Equals(SettingValue, "true", StringComparison.OrdinalIgnoreCase)
+        || SettingValue == "1"
+        || string.Equals(SettingValue, "yes", StringComparison.OrdinalIgnoreCase);
+
+    public string DisplayName => SettingKey switch
+    {
+        "DashShowStats" => "Summary stats",
+        "DashShowCashToday" => "Cash today",
+        "DashShowAttention" => "Attention chips",
+        "DashShowGraphingCalculator" => "Graphing calculator",
+        "DashShowRecentDeposits" => "Recent deposits",
+        "DashShowRecentWithdrawals" => "Recent withdrawals",
+        "DashShowRecentCustomers" => "Recent customers",
+        "DashShowRecentLedger" => "Recent ledger",
+        _ => SettingKey
+    };
 }
 
 public class SettingsPageViewModel

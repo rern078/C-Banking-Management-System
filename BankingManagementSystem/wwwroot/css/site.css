@@ -1281,6 +1281,91 @@ button.btn {
   height: 320px;
 }
 
+.settings-toggle-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.settings-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.settings-toggle:hover {
+  border-color: #9ec9c1;
+  background: var(--teal-soft);
+}
+
+.settings-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.settings-toggle-ui {
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  border-radius: 999px;
+  background: #c8d6d2;
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+.settings-toggle-ui::after {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease;
+}
+
+.settings-toggle input:checked + .settings-toggle-ui {
+  background: var(--teal);
+}
+
+.settings-toggle input:checked + .settings-toggle-ui::after {
+  transform: translateX(1.05rem);
+}
+
+.settings-toggle-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.settings-toggle-copy strong {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.settings-toggle-copy small {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.settings-dash-panel .panel-head {
+  margin-bottom: 0.35rem;
+}
+
 .hint {
   color: var(--ink-soft);
   font-size: 0.75rem;
