@@ -1,0 +1,145 @@
+@model BankingManagementSystem.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Request access";
+    var branches = ViewBag.Branches as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new();
+}
+
+<div class="auth-shell">
+    <aside class="auth-aside">
+        <div class="auth-aside-media" role="presentation"></div>
+        <div class="auth-aside-shade"></div>
+        <div class="auth-aside-body">
+            <a class="auth-brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark"><i class="bi bi-bank2"></i></span>
+                <span>Chamrern Bank</span>
+            </a>
+            <div class="auth-aside-copy">
+                <h2>Request a staff account.</h2>
+                <ol class="auth-steps">
+                    <li><span>1</span> Fill in your details and pick your branch</li>
+                    <li><span>2</span> An administrator reviews the request</li>
+                    <li><span>3</span> Once activated, you can sign in</li>
+                </ol>
+            </div>
+            <p class="auth-aside-foot">© @DateTime.Now.Year Chamrern Bank · Internal staff portal</p>
+        </div>
+    </aside>
+
+    <main class="auth-main">
+        <div class="auth-card auth-card-wide">
+            <a class="auth-back" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-arrow-left"></i> Back to sign in
+            </a>
+
+            <span class="auth-badge"><i class="bi bi-person-plus-fill"></i> New staff request</span>
+            <h1 class="auth-title">Request access</h1>
+            <p class="auth-sub">Your account starts inactive. An administrator activates it before the first sign-in.</p>
+
+            <form asp-action="Register" method="post" class="auth-form">
+                <div asp-validation-summary="ModelOnly" class="auth-alert"></div>
+
+                <div class="auth-field">
+                    <label asp-for="FullName"></label>
+                    <div class="auth-input">
+                        <i class="bi bi-person-vcard"></i>
+                        <input asp-for="FullName" placeholder="Tieng Chamrern" autocomplete="name" autofocus />
+                    </div>
+                    <span asp-validation-for="FullName" class="field-error"></span>
+                </div>
+
+                <div class="auth-grid-2">
+                    <div class="auth-field">
+                        <label asp-for="UserName">Username</label>
+                        <div class="auth-input">
+                            <i class="bi bi-at"></i>
+                            <input asp-for="UserName" placeholder="tieng.chamrern" autocomplete="username" />
+                        </div>
+                        <span asp-validation-for="UserName" class="field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="Phone">Phone</label>
+                        <div class="auth-input">
+                            <i class="bi bi-telephone"></i>
+                            <input asp-for="Phone" placeholder="012 345 678" autocomplete="tel" />
+                        </div>
+                        <span asp-validation-for="Phone" class="field-error"></span>
+                    </div>
+                </div>
+
+                <div class="auth-field">
+                    <label asp-for="Email">Work email</label>
+                    <div class="auth-input">
+                        <i class="bi bi-envelope"></i>
+                        <input asp-for="Email" placeholder="name@bank.local" autocomplete="email" />
+                    </div>
+                    <span asp-validation-for="Email" class="field-error"></span>
+                </div>
+
+                <div class="auth-field">
+                    <label asp-for="BranchId">Branch</label>
+                    <div class="auth-input">
+                        <i class="bi bi-building"></i>
+                        <select asp-for="BranchId" asp-items="branches">
+                            <option value="">Not assigned yet</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="BranchId" class="field-error"></span>
+                </div>
+
+                <div class="auth-grid-2">
+                    <div class="auth-field">
+                        <label asp-for="Password">Password</label>
+                        <div class="auth-input">
+                            <i class="bi bi-key"></i>
+                            <input asp-for="Password" type="password" placeholder="••••••••" autocomplete="new-password" id="passwordInput" />
+                            <button type="button" class="auth-eye" id="togglePassword" aria-label="Show password">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="field-error"></span>
+                    </div>
+
+                    <div class="auth-field">
+                        <label asp-for="ConfirmPassword">Confirm password</label>
+                        <div class="auth-input">
+                            <i class="bi bi-key-fill"></i>
+                            <input asp-for="ConfirmPassword" type="password" placeholder="••••••••" autocomplete="new-password" />
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+                    </div>
+                </div>
+
+                <p class="auth-note">
+                    <i class="bi bi-info-circle"></i>
+                    Use at least 6 characters with an uppercase letter, a digit, and a symbol.
+                </p>
+
+                <button type="submit" class="btn btn-auth">
+                    <i class="bi bi-send"></i> Send request
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a asp-controller="Account" asp-action="Login">Sign in</a>
+            </p>
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var toggle = document.getElementById('togglePassword');
+            var password = document.getElementById('passwordInput');
+            if (!toggle || !password) return;
+            toggle.addEventListener('click', function () {
+                var show = password.type === 'password';
+                password.type = show ? 'text' : 'password';
+                toggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+                toggle.innerHTML = show ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+            });
+        })();
+    </script>
+}

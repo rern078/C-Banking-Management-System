@@ -1,16 +1,134 @@
 @{
     ViewData["Title"] = "Home";
 }
-<section class="hero">
-    <div>
-        <h1>Chamrern Bank</h1>
-        <p>Staff portal for branches, customers, accounts, transfers, loans, cards, and audit logs.</p>
+
+<section class="landing-hero">
+    <div class="landing-hero-media" role="img" aria-label="Bank operations floor"></div>
+    <div class="landing-hero-shade"></div>
+    <div class="landing-hero-content">
+        <h1 class="landing-brand">Chamrern Bank</h1>
+        <p class="landing-lead">Staff operations desk for branches, accounts, and daily cash work.</p>
         <div class="cta-row">
-            <a class="btn" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Staff sign in</a>
+            <a class="btn btn-landing" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-box-arrow-in-right"></i> Sign in
+            </a>
+        </div>
+        <a class="landing-scroll" href="#what-you-can-do">
+            <i class="bi bi-chevron-down"></i> Explore the portal
+        </a>
+    </div>
+</section>
+
+<section class="landing-section" id="what-you-can-do">
+    <div class="landing-inner">
+        <p class="landing-eyebrow">What you can do</p>
+        <h2 class="landing-title">One desk for the whole branch day</h2>
+        <p class="landing-subtitle">Open accounts, post cash, and follow every movement from a single portal.</p>
+
+        <div class="landing-cards">
+            <article class="landing-card">
+                <span class="landing-card-icon tone-teal"><i class="bi bi-people-fill"></i></span>
+                <h3>Customers &amp; accounts</h3>
+                <p>Register customers, open savings or current accounts, and freeze or reactivate when needed.</p>
+            </article>
+            <article class="landing-card">
+                <span class="landing-card-icon tone-green"><i class="bi bi-cash-coin"></i></span>
+                <h3>Cash operations</h3>
+                <p>Post deposits and withdrawals with balance checks, references, and a full ledger trail.</p>
+            </article>
+            <article class="landing-card">
+                <span class="landing-card-icon tone-blue"><i class="bi bi-arrow-left-right"></i></span>
+                <h3>Transfers</h3>
+                <p>Move money between accounts with fees applied and both sides recorded automatically.</p>
+            </article>
+            <article class="landing-card">
+                <span class="landing-card-icon tone-gold"><i class="bi bi-safe"></i></span>
+                <h3>Products</h3>
+                <p>Manage loans, cards, cheques, and fixed deposits against customer accounts.</p>
+            </article>
         </div>
     </div>
-    <aside class="hero-panel">
-        <h2><i class="bi bi-shield-lock"></i> Operations desk</h2>
-        <p>Admin, Manager, and Staff roles with a full banking schema.</p>
-    </aside>
 </section>
+
+<section class="landing-section landing-section-dark">
+    <div class="landing-inner">
+        <p class="landing-eyebrow">Access levels</p>
+        <h2 class="landing-title">Built around three staff roles</h2>
+
+        <div class="landing-roles">
+            <article class="landing-role">
+                <h3><i class="bi bi-shield-lock"></i> Admin</h3>
+                <p>Full control: staff users, usernames, roles, bank settings, and audit history.</p>
+            </article>
+            <article class="landing-role">
+                <h3><i class="bi bi-clipboard-data"></i> Manager</h3>
+                <p>Branch oversight: dashboards, audit logs, approvals, and reporting views.</p>
+            </article>
+            <article class="landing-role">
+                <h3><i class="bi bi-person-workspace"></i> Staff</h3>
+                <p>Counter work: customers, accounts, deposits, withdrawals, and transfers.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="landing-section">
+    <div class="landing-inner">
+        <div class="landing-split">
+            <div>
+                <p class="landing-eyebrow">Control &amp; safety</p>
+                <h2 class="landing-title">Every action leaves a record</h2>
+                <p class="landing-subtitle">Balance checks run before money moves, and each posting stores who did it, when, and from where.</p>
+                <ul class="landing-list">
+                    <li><i class="bi bi-check2-circle"></i> Minimum balance and insufficient-funds checks</li>
+                    <li><i class="bi bi-check2-circle"></i> Balance before and after on every posting</li>
+                    <li><i class="bi bi-check2-circle"></i> Audit log with user, action, and IP address</li>
+                    <li><i class="bi bi-check2-circle"></i> Inactive, frozen, or closed users cannot sign in</li>
+                </ul>
+            </div>
+            <aside class="landing-figure">
+                <div class="landing-figure-row">
+                    <span>Deposits today</span>
+                    <strong class="text-in">+ $2,450.00</strong>
+                </div>
+                <div class="landing-figure-row">
+                    <span>Withdrawals today</span>
+                    <strong class="text-out">− $860.00</strong>
+                </div>
+                <div class="landing-figure-row">
+                    <span>Transfers today</span>
+                    <strong>$1,120.00</strong>
+                </div>
+                <div class="landing-figure-total">
+                    <span>Net cash</span>
+                    <strong class="text-in">$1,590.00</strong>
+                </div>
+                <p class="landing-figure-note">Sample dashboard figures</p>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<section class="landing-cta">
+    <div class="landing-inner landing-cta-inner">
+        <div>
+            <h2 class="landing-title">Ready to start your shift?</h2>
+            <p class="landing-subtitle">Sign in with your staff account to open the operations desk.</p>
+        </div>
+        <div class="cta-row">
+            <a class="btn btn-landing" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-box-arrow-in-right"></i> Staff sign in
+            </a>
+            <a class="btn btn-landing-ghost" asp-controller="Account" asp-action="Register">
+                <i class="bi bi-person-plus"></i> Request access
+            </a>
+        </div>
+    </div>
+</section>
+
+<footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+        <span><i class="bi bi-bank2"></i> Chamrern Bank</span>
+        <span>© @DateTime.Now.Year Chamrern Bank. Internal staff portal.</span>
+    </div>
+</footer>

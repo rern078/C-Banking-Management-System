@@ -1,8 +1,12 @@
+using BankingManagementSystem.Data;
 using BankingManagementSystem.Models;
+using BankingManagementSystem.Services;
 using BankingManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankingManagementSystem.Controllers;
 
@@ -10,11 +14,28 @@ public class AccountController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApplicationDbContext _db;
+    private readonly AuditService _audit;
 
-    public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+    public AccountController(
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager,
+        ApplicationDbContext db,
+        AuditService audit)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _db = db;
+        _audit = audit;
+    }
+
+    private async Task PopulateBranches()
+    {
+        ViewBag.Branches = await _db.Branches
+            .Where(b => b.Status == RecordStatus.Active)
+            .OrderBy(b => b.BranchName)
+            .Select(b => new SelectListItem($"{b.BranchCode} — {b.BranchName}", b.BranchId.ToString()))
+            .ToListAsync();
     }
 
     [HttpGet]
@@ -63,6 +84,60 @@ public class AccountController : Controller
             return Redirect(returnUrl);
 
         return RedirectToAction("Index", "Dashboard");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Register()
+    {
+        await PopulateBranches();
+        return View(new RegisterViewModel());
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        await PopulateBranches();
+        if (!ModelState.IsValid) return View(model);
+
+        var userName = model.UserName.Trim();
+        var email = model.Email.Trim();
+
+        if (await _userManager.FindByNameAsync(userName) is not null)
+        {
+            ModelState.AddModelError(nameof(model.UserName), "This username is already taken.");
+            return View(model);
+        }
+
+        if (await _userManager.FindByEmailAsync(email) is not null)
+        {
+            ModelState.AddModelError(nameof(model.Email), "An account with this email already exists.");
+            return View(model);
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = userName,
+            Email = email,
+            FullName = model.FullName.Trim(),
+            PhoneNumber = string.IsNullOrWhiteSpace(model.Phone) ? null : model.Phone.Trim(),
+            BranchId = model.BranchId,
+            Status = RecordStatus.Inactive
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+            return View(model);
+        }
+
+        await _userManager.AddToRoleAsync(user, "Staff");
+        await _audit.LogAsync(user.Id, "Register", "AspNetUsers", user.Id,
+            $"Access requested by {user.UserName} (pending activation)");
+
+        TempData["AuthSuccess"] = "Request received. An administrator must activate your account before you can sign in.";
+        return RedirectToAction(nameof(Login));
     }
 
     [Authorize, HttpPost, ValidateAntiForgeryToken]

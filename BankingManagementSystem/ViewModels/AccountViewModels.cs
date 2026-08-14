@@ -5,7 +5,8 @@ namespace BankingManagementSystem.ViewModels;
 
 public class LoginViewModel
 {
-    [Required, EmailAddress]
+    [Required(ErrorMessage = "Enter your email or username.")]
+    [Display(Name = "Email or username")]
     public string Email { get; set; } = string.Empty;
 
     [Required, DataType(DataType.Password)]
@@ -13,6 +14,35 @@ public class LoginViewModel
 
     [Display(Name = "Remember me")]
     public bool RememberMe { get; set; }
+}
+
+public class RegisterViewModel
+{
+    [Required, StringLength(100)]
+    [Display(Name = "Full name")]
+    public string FullName { get; set; } = string.Empty;
+
+    [Required, StringLength(60)]
+    [RegularExpression(@"^[A-Za-z0-9._-]+$", ErrorMessage = "Use letters, numbers, dots, dashes, or underscores only.")]
+    public string UserName { get; set; } = string.Empty;
+
+    [Required, EmailAddress, StringLength(150)]
+    public string Email { get; set; } = string.Empty;
+
+    [Phone, StringLength(30)]
+    [Display(Name = "Phone")]
+    public string? Phone { get; set; }
+
+    [Display(Name = "Branch")]
+    public int? BranchId { get; set; }
+
+    [Required, DataType(DataType.Password), StringLength(100, MinimumLength = 6)]
+    public string Password { get; set; } = string.Empty;
+
+    [Required, DataType(DataType.Password)]
+    [Display(Name = "Confirm password")]
+    [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
+    public string ConfirmPassword { get; set; } = string.Empty;
 }
 
 public class DashboardViewModel

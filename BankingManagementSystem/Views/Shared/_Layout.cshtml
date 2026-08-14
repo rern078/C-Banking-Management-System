@@ -18,7 +18,7 @@
     var controller = ViewContext.RouteData.Values["controller"]?.ToString();
     bool Nav(string name) => string.Equals(controller, name, StringComparison.OrdinalIgnoreCase);
 }
-<body class="@(User.Identity?.IsAuthenticated == true ? "app-shell" : "public-shell")">
+<body class="@(User.Identity?.IsAuthenticated == true ? "app-shell" : "public-shell")@(string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase) ? " landing-mode" : null)@(User.Identity?.IsAuthenticated != true && string.Equals(controller, "Account", StringComparison.OrdinalIgnoreCase) ? " auth-mode" : null)">
 @if (User.Identity?.IsAuthenticated == true)
 {
     <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
@@ -173,14 +173,14 @@
 }
 else
 {
-    <header class="topbar">
+    <header class="topbar public-topbar">
         <div class="topbar-inner">
             <a class="brand public-brand" asp-controller="Home" asp-action="Index">
                 <span class="brand-mark"><i class="bi bi-bank2"></i></span>
                 <span class="brand-text">Chamrern Bank</span>
             </a>
             <nav class="nav">
-                <a class="btn btn-sm" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Sign in</a>
+                <a class="nav-link-quiet" asp-controller="Account" asp-action="Login">Sign in</a>
             </nav>
         </div>
     </header>
